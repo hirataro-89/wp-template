@@ -104,6 +104,3 @@ WordPress用にCSSやJavaScriptをビルドする場合はNPM Scriptsの`buid fo
 
 # WordPressコンテンツの同期方法
 WordPress内で作成した記事やページ、その他設定などはNPM Scriptsの`wp-contents export`コマンドでバックアップファイルを出力できます。このバックアップファイルをGitなどで管理し、`wp-contents import`でそのバックアップファイルをインポートして開発者間でのWordPressコンテンツを同期できます。あくまで単一のバックアップファイルなので差分管理などはできず、頻繁な更新には向きません。（コンフリクトしてもどちらかのファイルしか採用できません）
-
-# wp-template
-# wp-template

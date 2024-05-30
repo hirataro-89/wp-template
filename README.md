@@ -33,10 +33,8 @@
   - Viteのローカルサーバーのものを参照しているので
 - 終了時は`wp-stop`でDockerのコンテナを停止
 
-## 画像の格納先、読み込み方について（大事）
-画像パスなどが開発・ビルド後できちんと通るように下記ルールでお願いします。
-
-`img`タグで読み込む画像は`src/public/images`内に、CSSやjsで読み込む画像は`src/assets/images/`に格納してください。
+## 画像の格納先、読み込み方について
+画像は`src/assets/images/`に格納してください。
 
 フォルダ構造
 ```
@@ -45,27 +43,25 @@
     └images
       └background.png
       └js.png
-  └pubilc
-    └images
       └static.png
 ```
-Viteではpublicフォルダはルートとして扱われるため、`/images/static.png`というパスで画像を読み込むことができます。
 
 ▼HTML
 ```html
-<img src="/images/static.png" alt="" width="300" height="300" />
+<picture>
+  <source srcset="/images/static.avif" type="image/avif">
+  <img src="/images/static.png" loading="lazy" width="512" height="512" alt="">
+</picture>
 ```
-
-CSSで画像を読み込む場合は相対パスではなく、`/assets`から始めるパス名にしてください。こちらもビルド時にViteがパスを解決するためです。
 
 ▼CSS
 ```css
-background-image: url("/assets/images/background.png");
+background-image: url("/images/background.png");
 ```
 jsで画像ファイルを読み込む場合はViteにビルド時にパス解決されるよう`import`文で読み込んでください。
 
 ▼JS
-```ts
+```js
 import imgsrc from "/assets/images/js.png";
 // jsから画像を読み込むサンプル
 const canvas = document.querySelector<HTMLCanvasElement>("#canvas");

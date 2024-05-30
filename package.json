@@ -4,12 +4,21 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@wordpress/env": "5.14.0"
+    "@wordpress/env": "5.14.0",
+    "autoprefixer": "^10.4.19",
+    "debounce": "^2.1.0",
+    "handlebars": "^4.7.8",
+    "imagemin": "^9.0.0",
+    "imagemin-webp": "^8.0.0",
+    "resolve": "^1.22.8",
+    "sharp": "^0.33.4",
+    "vite-plugin-handlebars": "^2.0.0",
+    "vite-plugin-image-optimizer": "^1.1.8"
   },
   "scripts": {
     "dev": "vite --host",
     "build": "rm -rf dist && vite build",
-    "build for wp": "vite build --mode wp",
+    "build:wp": "vite build --mode wp",
     "preview": "vite preview",
     "wp-start": "wp-env start",
     "wp-stop": "wp-env stop",

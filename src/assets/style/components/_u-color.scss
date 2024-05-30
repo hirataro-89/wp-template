@@ -1,0 +1,8 @@
+@use "../globals/" as *;
+
+.u-color--red {
+  color: red;
+  @include mq(md) {
+    color: $accent-color;
+  }
+}

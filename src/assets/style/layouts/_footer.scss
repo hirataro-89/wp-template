@@ -1,7 +1,1 @@
-.global-footer {
-  display: block;
-}
-
-.sample {
-  color: red;
-}
+@use "../globals/" as *;

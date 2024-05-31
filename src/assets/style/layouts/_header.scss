@@ -1,3 +1,5 @@
+@use "../globals/" as *;
 .header__logo {
   max-width: 100px;
+  margin-inline: auto;
 }

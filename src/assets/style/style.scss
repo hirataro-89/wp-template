@@ -5,9 +5,9 @@
 @use "pages";
 @use "utils";
 
-
+/* 下記サンプル 構築時は削除してください */
 body {
-  background-color: pink;
+  background-color: var(--white);
 }
 
 .bg {

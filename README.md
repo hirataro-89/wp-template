@@ -24,22 +24,30 @@
 あとは通常の手順でHTML・CSS・JavaScriptを開発していけばOK。
 
 ## WordPressテーマ開発時
-- 静的制作時と同様に`yarn dev`
 - `yarn wp-start`
   - 初回は色々ダウンロードするので時間かかる
 - `wp-start`が立ち上がると`localhost:8888`にアクセスできるようになる
 -   ここがWordPressのローカル環境
-- 開発時、CSSやJavaScriptは静的作成時と同じように`src`フォルダ内のファイルを操作してください
+- 静的制作時と同様に`yarn dev`
+- 開発時(`WP_DEBUG=true`時(後述します))、CSSやJavaScriptは静的作成時と同じように`src`フォルダ内のファイルを操作してください
   - Viteのローカルサーバーのものを参照しているので
+- 仕様上viteのホットリロードは止めているので手動でリロードしてください
 - 終了時は`wp-stop`でDockerのコンテナを停止
 
 ## 画像の格納先、読み込み方について
-画像は`src/assets/images/`に格納してください。
+画像は`src/public/images/`に格納してください。<br>
+なお、`avif`形式に自動で変換するようなscript入れてるので、<br>
+画像を読み込む際は基本 `avif`でお願いします
 
 フォルダ構造
 ```
 └src
   └assets
+    └styles
+      └style.scss
+    └js
+      └script.js
+  └public
     └images
       └background.png
       └js.png
@@ -56,7 +64,10 @@
 
 ▼CSS
 ```css
-background-image: url("/images/background.png");
+background-image: image-set(
+  url("/images/background.avif") type("image/avif"),
+  url("/images/background.png") type("image/png")
+);
 ```
 jsで画像ファイルを読み込む場合はViteにビルド時にパス解決されるよう`import`文で読み込んでください。
 
@@ -73,13 +84,12 @@ image.addEventListener("load", () => {
 })
 ```
 
-WordPress開発時にPHPで画像を読み込む場合はテンプレートフォルダ内の画像を参照します。WordPress用ビルド時に静的制作時のpublicの画像はテンプレートフォルダに出力されますが、動的に変更はなされないので画像変更時は都度ビルド、もしくは手動でコピーが必要になります。
-
+▼PHP
 ```php
 <img src="<?php echo get_template_directory_uri();?>/images/static.png" alt="" width="300" height="300" />
 ```
 
-上記のように静的資材HTMLのコードの`src`の頭に`<?php echo get_template_directory_uri();?>`を付与することでうまく読み込めるようになります。
+上記のように静的資材HTMLのコードの頭に`<?php echo get_template_directory_uri();?>`を付与することでうまく読み込めるようになります。
 
 ## 静的資材ビルドについて
 - 静的資材をビルドする場合は`yarn build`を実行
@@ -89,24 +99,22 @@ WordPress開発時にPHPで画像を読み込む場合はテンプレートフ�
 - WordPress用にCSSやJavaScriptをビルドする場合は`yarn buid:wp`コマンドを実行
 - `wordpress/themes/TEMPLATE_NAME/`内に`assets`フォルダと`images`フォルダが出力される
   - `assets`フォルダにはビルドした各種CSSやJavaScriptが出力される
-  - `images`にはHTMLから読み込んだ静的な画像が出力される
+  - `images`には画像が出力される
 
 ## ビルドファイルでのWordPressの確認方法
-ヘッダー部分に下記のデバッグ用のコマンドがあります。
+`functions.php`に下記のデバッグ用のコマンドを仕込んでいます
 
 ```php
-<?php 
-  if(WP_DEBUG){
+if (WP_DEBUG) {
     $root = "http://localhost:5173";
     $css_ext = "scss";
-    $js_ext = "ts";
-    echo '<script type="module" src="http://localhost:5173/@vite/client"></script>';
-  }else{
+    $js_ext = "js";
+    wp_enqueue_script('vite-client', $root . '/@vite/client', array(), null, true);
+} else {
     $root = get_template_directory_uri();
     $css_ext = "css";
     $js_ext = "js";
-  } 
-?>
+}
 ```
 
 この`WP_DEBUG`を`false`に変えることでWordPressがビルドファイルを読み込むようになります。（.wp-env.jsonの設定で`WP_DEBUG`は常に`true`になっています。こちらの値を変更するとDockerのコンテナが再構築され時間がかかるのでオススメしません）

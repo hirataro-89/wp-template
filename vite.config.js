@@ -19,8 +19,7 @@ const inputsForWordPress = {
         "src/assets/js",
         file.slice(0, file.length - extname(file).length),
       ),
-      fileURLToPath(new URL(file,
-        import.meta.url)),
+      resolve(__dirname, file),
     ]),
   ),
 
@@ -32,8 +31,7 @@ const inputsForStatic = {
   ...Object.fromEntries(
     globSync("src/**/*.html").map((file) => [
       relative("src", file.slice(0, file.length - extname(file).length)),
-      fileURLToPath(new URL(file,
-        import.meta.url)),
+      resolve(__dirname, file),
     ]),
   ),
 };
@@ -48,7 +46,7 @@ export default defineConfig(({
     origin: mode == "wp" ? undefined : "http://localhost:5173",
   },
   build: {
-    // minify: false,
+    minify: false,
     outDir: mode === "wp" ?
       resolve(__dirname, "wordpress/themes/TEMPLATE_NAME/") : resolve(__dirname, "dist"),
     rollupOptions: {

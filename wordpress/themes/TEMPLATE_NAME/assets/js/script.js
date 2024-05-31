@@ -1,7 +1,5 @@
-import '../style/style.scss';
-import imgSrc from "/images/js.png";
-
-// jsから画像を読み込むサンプル
+/* empty css      */
+const imgSrc = "" + new URL("../../images/js.png", import.meta.url).href;
 const canvas = document.querySelector("#canvas");
 const context = canvas.getContext("2d");
 const image = new Image();
@@ -11,8 +9,6 @@ image.src = imgSrc;
 image.onload = function() {
   context.drawImage(image, 0, 0, 300, 300);
 };
-
-/* 360px以下はviewport固定 */
 !function() {
   const viewport = document.querySelector('meta[name="viewport"]');
   function switchViewport() {
@@ -24,5 +20,4 @@ image.onload = function() {
   addEventListener("resize", switchViewport, false);
   switchViewport();
 }();
-
-console.log('hello');
+console.log("hello");

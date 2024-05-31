@@ -31,7 +31,7 @@
 <body <?php body_class(); ?>>
 	<header class="l-header js-header">
 		<div class="l-header__inner p-header">
-			<h1 class="p-header__logo"><a href="/"><img src="<?php echo get_template_directory_uri() ?>/assets/images/logo.png " alt="ロゴ画像"></a></h1>
+			<h1 class="p-header__logo"><a href="/"><img src="<?php echo get_template_directory_uri() ?>/images/vite.png" alt="vite"></a></h1>
 
 			<!-- ハンバーガーメニュー -->
 			<button type="button" class="c-hg-btn js-btn" aria-label="メニュー">

@@ -1,4 +1,4 @@
-import '../style/style.scss';
+import '../style/style.scss?inline';
 import imgSrc from "/images/js.png";
 
 // jsから画像を読み込むサンプル

@@ -90,7 +90,7 @@ export default defineConfig(({
         quality: 80,
       },
     }),
-    convertImagesToAvif()
+    convertImagesToAvif(),
   ],
   resolve: {
     alias: {

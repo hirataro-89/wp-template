@@ -19,6 +19,41 @@
   --base-font-family: 'Noto Sans JP', sans-serif;
   --second-font-family: 'Gotu', sans-serif;
   --title-font-family: 'Lato', sans-serif;
+
+
+  /* 8pxを余白の基準とした余白ルール */
+  --leading-trim: calc((1em - 1lh) / 2);
+  --spacing-unit: 0.5rem; //8px
+
+  --spacing-xs: calc(var(--spacing-unit) / 2); //4px
+  --spacing-sm: var(--spacing-unit); //8px
+  --spacing-md: calc(var(--spacing-unit) * 2); //16px
+  --spacing-lg: calc(var(--spacing-unit) * 3); //24px
+  --spacing-xl: calc(var(--spacing-unit) * 5); //40px
+  --spacing-2xl: calc(var(--spacing-unit) * 8); //64px
+  --spacing-3xl: calc(var(--spacing-unit) * 13); //124px
+
+  /* line-height分の余白を打ち消す */
+  --spacing-xs-trim: calc(var(--spacing-xs) + var(--leading-trim));
+  --spacing-sm-trim: calc(var(--spacing-sm) + var(--leading-trim));
+  --spacing-md-trim: calc(var(--spacing-md) + var(--leading-trim));
+  --spacing-lg-trim: calc(var(--spacing-lg) + var(--leading-trim));
+  --spacing-xl-trim: calc(var(--spacing-xl) + var(--leading-trim));
+  --spacing-2xl-trim: calc(var(--spacing-2xl) + var(--leading-trim));
+  --spacing-3xl-trim: calc(var(--spacing-3xl) + var(--leading-trim));
+
+  /* --leading-trimの使い方 */
+  // h2 {
+  //   /* デザインカンプで取得した余白が32pxの場合 */
+  //   margin-block-start: calc(32px + var(--leading-trim));
+  // }
+}
+
+@supports not (top: 1lh) {
+  :root {
+    --leading-trim: 0px;
+    /* `px`などの単位が必要 */
+  }
 }
 
 /* inner */

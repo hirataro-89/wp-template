@@ -11,7 +11,7 @@ const root = resolve(__dirname, "src");
 
 // WordPress用ビルドのinput設定。WordPress用にはhtmlファイルは不要なため、scssとjsのみをビルド対象にする
 const inputsForWordPress = {
-  style: resolve(root, "/assets/style/style.scss"),
+  style: resolve(root, "assets", "style", "style.scss"),
   // 動的にファイルを取得する @see https://rollupjs.org/configuration-options/#input
   ...Object.fromEntries(
     globSync("src/assets/js/*.js").map((file) => [
@@ -27,7 +27,7 @@ const inputsForWordPress = {
 
 // 静的開発用のinput設定。静的資材用にはhtmlファイルを経由してscss,jsなどをビルドする
 const inputsForStatic = {
-  style: resolve(root, "/assets/style/style.scss"),
+  style: resolve(root, "assets", "style", "style.scss"),
   ...Object.fromEntries(
     globSync("src/**/*.html").map((file) => [
       relative("src", file.slice(0, file.length - extname(file).length)),

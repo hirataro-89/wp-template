@@ -3,6 +3,7 @@ import { resolve, relative, extname } from "path";
 import { globSync } from "glob";
 import { fileURLToPath } from "node:url";
 import autoprefixer from "autoprefixer";
+import handlebars from "vite-plugin-handlebars";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import convertImages from './bin/vite-plugin-convert-images.js';
 
@@ -92,6 +93,9 @@ export default defineConfig(({
     }),
     // format: 'webp' or 'avif'で画像の変換形式を指定
     convertImages({ format: 'webp' }),
+    handlebars({
+      partialDirectory: resolve(__dirname, "src/components"),
+    }),
   ],
   resolve: {
     alias: {

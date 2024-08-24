@@ -10,32 +10,36 @@
 </head>
 
 <body>
-  <p>テスト</p>
-  <a href="/about/">Aboutへ</a>
-  <p>背景画像</p>
-  <div class="bg"></div>
-  <p>静的画像</p>
-  <div class="image">
-    <picture>
-      <source srcset="/images/static.avif" type="image/avif">
-      <img src="/images/static.png" loading="lazy" width="512" height="512" alt="">
-    </picture>
-  </div>
-  <p>JSで画像</p>
-  <canvas width="300" height="300" id="canvas"></canvas>
-  <div class="inner">
-    <div class="sample u-color--red">
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium distinctio corporis in placeat minus,
-        facere magni explicabo beatae nihil accusantium numquam impedit, sapiente reprehenderit aut, non aliquam odio
-        provident mollitia.</p>
-        <div class="image">
-          <picture>
-            <source srcset="/images/static.avif" type="image/avif">
-            <img src="/images/static.png" loading="lazy" width="512" height="512" alt="">
-          </picture>
-        </div>
+  {{> header}}
+
+  <main>
+    <p>テスト</p>
+    <a href="/about/">Aboutへ</a>
+    <p>背景画像</p>
+    <div class="bg"></div>
+    <p>静的画像</p>
+    <div class="image">
+      <picture>
+        <source srcset="/images/static.avif" type="image/avif">
+        <img src="/images/static.png" loading="lazy" width="512" height="512" alt="">
+      </picture>
     </div>
-  </div>
+    <p>JSで画像</p>
+    <canvas width="300" height="300" id="canvas"></canvas>
+    <div class="inner">
+      <div class="sample u-color--red">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium distinctio corporis in placeat minus,
+          facere magni explicabo beatae nihil accusantium numquam impedit, sapiente reprehenderit aut, non aliquam odio
+          provident mollitia.</p>
+          <div class="image">
+            <picture>
+              <source srcset="/images/static.avif" type="image/avif">
+              <img src="/images/static.png" loading="lazy" width="512" height="512" alt="">
+            </picture>
+          </div>
+      </div>
+    </div>
+  </main>
 </body>
 
 </html>

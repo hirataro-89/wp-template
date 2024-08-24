@@ -3,6 +3,7 @@
 - Docker
   - [こちら](https://matsuand.github.io/docs.docker.jp.onthefly/get-docker/)からDockerをインストール
   - アプリを立ち上げ、アカウント登録し起動しておく
+  - ※WP化しないならこの工程は不要
 
 ## 開発環境立ち上げ
 1. Dockerを立ち上げる
@@ -19,6 +20,14 @@
 ```html
 <link rel="stylesheet" href="/assets/style/style.scss" />
 <script src="/assets/js/script.js" type="module"></script>
+```
+
+- header等の共通パーツは`includes`フォルダ内で作成し、再利用できるようにしています。
+  - `handlebars`というプラグインを使用
+  - [使い方参考記事](https://zenn.dev/tamon_kondo/articles/e6aceb1ea15f4b)
+
+```html
+{{> header}} // includes/header.htmlを呼び出す
 ```
 
 あとは通常の手順でHTML・CSS・JavaScriptを開発していけばOK。
@@ -43,6 +52,9 @@
 
 フォルダ構造
 ```
+└includes // コンポーネントフォルダ
+  └hoge.html
+  └fuga.html
 └src
   └assets
     └styles

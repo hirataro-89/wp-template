@@ -93,8 +93,10 @@ export default defineConfig(({
     }),
     // format: 'webp' or 'avif'で画像の変換形式を指定
     convertImages({ format: 'webp' }),
+
+    // コンポーネントのディレクトリを読み込む
     handlebars({
-      partialDirectory: resolve(__dirname, "src/components"),
+      partialDirectory: resolve(__dirname, "includes"),
     }),
   ],
   resolve: {

@@ -4,7 +4,7 @@ import { globSync } from "glob";
 import { fileURLToPath } from "node:url";
 import autoprefixer from "autoprefixer";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
-import convertImagesToAvif from './bin/vite-plugin-convert-avif.js';
+import convertImages from './bin/vite-plugin-convert-images.js';
 
 // サイトのルートを決定
 const root = resolve(__dirname, "src");
@@ -90,7 +90,8 @@ export default defineConfig(({
         quality: 80,
       },
     }),
-    convertImagesToAvif(),
+    // format: 'webp' or 'avif'で画像の変換形式を指定
+    convertImages({ format: 'webp' }),
   ],
   resolve: {
     alias: {

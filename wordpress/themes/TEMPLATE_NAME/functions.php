@@ -10,18 +10,24 @@ function add_custom_scripts()
         $css_ext = "scss";
         $js_ext = "js";
         wp_enqueue_script('vite-client', $root . '/@vite/client', array(), null, true);
+        // テーマのCSSの追加（バージョンなし）
+        $style_path = $root . '/assets/style/style.' . $css_ext;
+        wp_enqueue_style('theme-styles', $style_path, array(), null, false);
     } else {
         $root = get_template_directory_uri();
         $css_ext = "css";
         $js_ext = "js";
+
+        // テーマのCSSの追加（バージョンあり）
+        $style_path = $root . '/assets/style/style.' . $css_ext;
+        $version = filemtime(get_template_directory() . '/assets/style/style.' . $css_ext);
+        $style_path = $root . '/assets/style/style.' . $css_ext;
+        $version = filemtime(get_template_directory() . '/assets/style/style.' . $css_ext);
+        wp_enqueue_style('theme-styles', $style_path, array(), $version, false);
     }
     // Google Fontsの追加
     wp_enqueue_style('google-fonts-montserrat', 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap', false);
     wp_enqueue_style('google-fonts-noto', 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap', false);
-
-
-    // テーマのCSSの追加
-    wp_enqueue_style('theme-styles', $root . '/assets/style/style.' . $css_ext, false);
 
     // jQueryの追加
     wp_enqueue_script('jquery', 'https://code.jquery.com/jquery-3.6.0.js', array(), '3.6.0', true);

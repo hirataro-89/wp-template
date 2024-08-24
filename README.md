@@ -37,8 +37,9 @@
 
 ## 画像の格納先、読み込み方について
 画像は`src/public/images/`に格納してください。<br>
-なお、`avif`形式に自動で変換するようなscript入れてるので、<br>
-画像を読み込む際は基本 `avif`でお願いします
+なお、`webp`もしくは`avif`形式に自動で変換するようなscript入れてるので、<br>
+画像を読み込む際は基本 `webp`もしくは`avif`でお願いします<br>
+(画像の変換は`vite.config.js`で設定可能)
 
 フォルダ構造
 ```
@@ -58,7 +59,7 @@
 ▼HTML
 ```html
 <picture>
-  <source srcset="/images/static.avif" type="image/avif">
+  <source srcset="/images/static.webp" type="image/webp">
   <img src="/images/static.png" loading="lazy" width="512" height="512" alt="">
 </picture>
 ```
@@ -66,7 +67,7 @@
 ▼CSS
 ```css
 background-image: image-set(
-  url("/images/background.avif") type("image/avif"),
+  url("/images/background.webp") type("image/webp"),
   url("/images/background.png") type("image/png")
 );
 ```

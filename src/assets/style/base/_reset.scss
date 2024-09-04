@@ -57,7 +57,7 @@ img {
 }
 
 /* Natural flow and rhythm in articles by default */
-article > * + * {
+article>*+* {
   margin-top: 1em;
 }
 
@@ -88,6 +88,12 @@ textarea {
   border-radius: 0;
   font: inherit;
   outline: none;
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
 }
 
 textarea {

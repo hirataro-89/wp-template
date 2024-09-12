@@ -10,6 +10,9 @@ import convertImages from './bin/vite-plugin-convert-images.js';
 // サイトのルートを決定
 const root = resolve(__dirname, "src");
 
+// 環境編集を取得
+const isDev = process.env.NODE_ENV === "development";
+
 // WordPress用ビルドのinput設定。WordPress用にはhtmlファイルは不要なため、scssとjsのみをビルド対象にする
 const inputsForWordPress = {
   style: resolve(root, "assets", "style", "style.scss"),
@@ -91,8 +94,9 @@ export default defineConfig(({
         quality: 80,
       },
     }),
+    // 開発環境では画像をwebpに変換
     // format: 'webp' or 'avif'で画像の変換形式を指定
-    convertImages({ format: 'webp' }),
+    isDev ? convertImages({ format: 'webp' }): null,
 
     // コンポーネントのディレクトリを読み込む
     handlebars({

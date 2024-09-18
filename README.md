@@ -1,14 +1,14 @@
 ## 必要環境
 - Node.js
-- Docker
+- Docker(WordPress化する場合のみ)
   - [こちら](https://matsuand.github.io/docs.docker.jp.onthefly/get-docker/)からDockerをインストール
   - アプリを立ち上げ、アカウント登録し起動しておく
-  - ※WP化しないならこの工程は不要
+  - ※WordPress化しないならこの工程は不要
 
 ## 開発環境立ち上げ
-1. Dockerを立ち上げる
-   1. macの場合、ステータスバーにDockerのアイコンが表示されていて`running`となっていればOK
-2. `yarn`とたたいて`node_module`をインストール
+- Dockerを立ち上げる(WordPress化する場合のみ)
+   - macの場合、ステータスバーにDockerのアイコンが表示されていて`running`となっていればOK
+- `yarn`とたたいて`node_module`をインストール
 
 
 ## 静的制作時
@@ -16,6 +16,8 @@
   - ローカルサーバー`localhost:5173`が立ち上がる
 - 静的資材は基本`src`フォルダ内で作成。
 - CSSやJavaScriptは直接`.scss`ファイルや`.js`を参照すれば、Viteがいい感じにしてくれます。
+- ※WordPress化しない場合、`wordpress`ディレクトリは不要なので削除でOK
+  - gitignoreに記載されているコメントアウトも消す（監視対象外にするため）
 
 ```html
 <link rel="stylesheet" href="/assets/style/style.scss" />

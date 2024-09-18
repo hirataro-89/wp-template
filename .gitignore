@@ -13,6 +13,7 @@ dist-ssr
 *.local
 .yarn
 .yarnrc.yml
+yarn.lock
 
 # Editor directories and files
 .vscode/*
@@ -29,3 +30,6 @@ dist-ssr
 .husky/.gitignore
 _
 
+# 静的コーディングのみのときはWordPressのファイルは不要なので
+# ↓のコメントアウトを外して/WordPress/ディレクトリごと削除
+# wordpress

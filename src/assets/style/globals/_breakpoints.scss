@@ -49,35 +49,3 @@ $breakpoints: null;
 		@content;
 	}
 }
-
-@if $startFrom == sp {
-	//pcのみ表示
-	[data-device="pc"] {
-		display: none !important;
-		@include mq(md) {
-			display: block !important;
-		}
-	}
-
-	//モバイルのみ表示
-	[data-device="sp"] {
-		@include mq("md") {
-			display: none !important;
-		}
-	}
-} @else {
-	//pcで表示
-	[data-device="pc"] {
-		@include mq("md") {
-			display: none !important;
-		}
-	}
-
-	//モバイルのみ表示
-	[data-device="sp"] {
-		display: none !important;
-		@include mq("md") {
-			display: block !important;
-		}
-	}
-}

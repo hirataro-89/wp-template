@@ -1,13 +1,17 @@
 @use "sass:math";
 
-
 :root {
+  /* inner */
+  --inner: 1080px;
+  --padding-pc: 25px;
+  --padding-sp: 15px;
+
   /* color */
-  --text-color: #0D2936;
-  --accent-color: #408F95;
-  --primary-color: #ff0000;
-  --secondary-color: #0000ff;
-  --white: #fff;
+  --color-white: #fff;
+  --color-text: #0D2936;
+  --color-accent: #408F95;
+  --color-primary: #ff0000;
+  --color-secondary: #0000ff;
 
   /* font-weight */
   --regular: 300;
@@ -54,15 +58,4 @@
     --leading-trim: 0px;
     /* `px`などの単位が必要 */
   }
-}
-
-/* inner */
-$inner: 1080px;
-/* padding */
-$padding-pc: 25px;
-$padding-sp: 15px;
-
-
-body {
-  font-family: var(--base-font-family);
 }

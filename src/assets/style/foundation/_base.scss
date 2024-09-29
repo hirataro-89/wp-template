@@ -1,6 +1,9 @@
 /* リキッドレイアウト対応 */
 @use "../globals" as *;
 
+// デザインカンプのinnerの幅を指定（リキッドレイアウト用）
+$inner: 1080px;
+
 @if $startFrom == sp {
   //スマホファースト
   html {
@@ -85,6 +88,7 @@ img {
 
 /* bodyにデフォルト値を設定する */
 body {
+  font-family: var(--base-font-family);
   --clamp-viewport-min: 375;
   --clamp-viewport-max: 1200;
   --clamp-min: 14;
@@ -96,3 +100,18 @@ body {
 //   --clamp-min: 20;
 //   --clamp-max: 24;
 // }
+
+
+[data-device="pc"] {
+  // pcのみ表示
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+[data-device="sp"] {
+  // spのみ表示
+  @media (min-width: 768px) {
+    display: none;
+  }
+}

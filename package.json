@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@splidejs/splide": "^4.1.4",
     "@wordpress/env": "5.14.0",
     "autoprefixer": "^10.4.19",
     "chokidar": "^3.6.0",

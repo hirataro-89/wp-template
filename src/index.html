@@ -12,7 +12,46 @@
 <body>
   {{> header}}
 
-  <main>
+  <main class="l-top">
+    <section class="p-mv">
+      <div class="p-mv__inner">
+        <div class="p-mv__title-wrap">
+          <h2 class="p-mv__main-title">メインタイトル</h2>
+          <p class="p-mv__sub-title">ここにサブタイトルが入ります。<br>ここにサブタイトルが入ります。</p>
+        </div>
+        <div class="p-mv__splide splide" aria-label="main-visual">
+          <div class="splide__track">
+            <ul class="splide__list">
+              <li class="splide__slide">
+                <div class="splide__slide-image">
+                  <picture>
+                    <source srcset="/images/img_mv01.webp" type="image/webp">
+                    <img src="/images/img_mv01.png" width="512" height="512" alt="">
+                  </picture>
+                </div>
+              </li>
+              <li class="splide__slide">
+                <div class="splide__slide-image">
+                  <picture>
+                    <source srcset="/images/img_mv02.webp" type="image/webp">
+                    <img src="/images/img_mv02.png" width="512" height="512" alt="">
+                  </picture>
+                </div>
+              </li>
+              <li class="splide__slide">
+                <div class="splide__slide-image">
+                  <picture>
+                    <source srcset="/images/img_mv03.webp" type="image/webp">
+                    <img src="/images/img_mv03.png" width="512" height="512" alt="">
+                  </picture>
+                </div>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
     <p>テスト</p>
     <a href="/about/">Aboutへ</a>
     <p>背景画像</p>
@@ -20,12 +59,10 @@
     <p>静的画像</p>
     <div class="image">
       <picture>
-        <source srcset="/images/static.avif" type="image/avif">
+        <source srcset="/images/static.webp" type="image/webp">
         <img src="/images/static.png" loading="lazy" width="512" height="512" alt="">
       </picture>
     </div>
-    <p>JSで画像</p>
-    <canvas width="300" height="300" id="canvas"></canvas>
     <div class="inner">
       <div class="sample u-color--red">
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium distinctio corporis in placeat minus,
@@ -33,7 +70,7 @@
           provident mollitia.</p>
           <div class="image">
             <picture>
-              <source srcset="/images/static.avif" type="image/avif">
+              <source srcset="/images/static.webp" type="image/webp">
               <img src="/images/static.png" loading="lazy" width="512" height="512" alt="">
             </picture>
           </div>

@@ -1,4 +1,5 @@
-const drawer = jQuery(function ($) {
+jQuery(function ($) {
+    // この中に記載_WordPressでも使えるように
     // ハンバーガーメニュー
     $(function () {
         $(".js-hamburger").click(function () {

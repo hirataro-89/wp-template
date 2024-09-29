@@ -1,5 +1,8 @@
+## 説明動画
+[こちら](https://defiant-crow-3a6.notion.site/1cd5a20fea11451aa4c16f1490afeea8?pvs=4)
+
 ## 必要環境
-- Node.js
+- Node.js （18系以上推奨）
 - Docker(WordPress化する場合のみ)
   - [こちら](https://matsuand.github.io/docs.docker.jp.onthefly/get-docker/)からDockerをインストール
   - アプリを立ち上げ、アカウント登録し起動しておく

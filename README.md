@@ -1,3 +1,9 @@
+# 開発環境に関するDOC
+
+## 各種ガイドライン
+[コーディングガイドラインはこちら](./doc/coding-guidelines.md)
+[PRやissueに関するガイドラインはこちら](./doc/pr-issue-guidelines.md)
+
 ## 説明動画
 [こちら](https://defiant-crow-3a6.notion.site/1cd5a20fea11451aa4c16f1490afeea8?pvs=4)
 

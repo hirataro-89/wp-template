@@ -1,5 +1,6 @@
 @use "sass:math";
 
+
 // 数値のみを取り出す
 // 参照：https://css-tricks.com/snippets/sass/strip-unit-function/
 @function strip-unit($number) {
@@ -13,6 +14,7 @@
 @function vw($window_width, $size) {
 	@return math.div($size, $window_width) * 100vw;
 }
+
 
 // remへの計算式（16pxを基準としている。10pxを基準とする場合は16を10に変更する）
 @function rem($pixels) {

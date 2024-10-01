@@ -7,15 +7,15 @@ import {
 export default function convertImages(options = {format: 'webp'}) {
   // デフォルトはwebp形式に変換
   return {
-    name: 'convert-images-to-avif', // プラグイン名
+    name: 'convert-images', // プラグイン名
     enforce: 'pre',
     buildStart() {
       const watcher = watch('src/public/images/**/*.{png,jpg,jpeg}', {
         persistent: true
       });
-      watcher.on('add', async (filePath) => { // `path` を `filePath` に変更
+      watcher.on('add', async (filePath) => {
         if (/\.(png|jpe?g)$/.test(filePath)) {
-          const dir = path.dirname(filePath); // `path` モジュールを正しく参照
+          const dir = path.dirname(filePath);
           const base = path.basename(filePath, path.extname(filePath));
           const avifPath = path.resolve(dir, `${base}.avif`);
           const webpPath = path.resolve(dir, `${base}.webp`);

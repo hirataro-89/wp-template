@@ -1,0 +1,23 @@
+<!--
+それぞれのパターンを用意しておく事ができます
+例：位置、色、あしらい etc..
+
+呼び出し方：
+{{> c-section-title title="表示させたいテキスト" left=true(中央寄せならcenter=trueのように使用)  class="クラス名" }}
+-->
+
+
+<!-- 中央寄せ -->
+{{#if center}}
+<h2 class="c-section-title {{#if class}}{{class}}{{/if}}" data-title="{{title}}">{{title}}</h2>
+{{/if}}
+
+<!-- 左寄せ -->
+{{#if left}}
+<h2 class="c-section-title c-section-title--left {{#if class}}{{class}}{{/if}}" data-title="{{title}}">{{title}}</h2>
+{{/if}}
+
+<!-- 右寄せ -->
+{{#if right}}
+<h2 class="c-section-title c-section-title--right {{#if class}}{{class}}{{/if}}" data-title="{{title}}">{{title}}</h2>
+{{/if}}

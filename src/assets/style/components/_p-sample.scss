@@ -1,0 +1,73 @@
+@use "../globals/" as *;
+
+.p-sample {
+  padding-block: var(--spacing-xl);
+}
+
+.p-sample__text-block {
+  margin-block: var(--spacing-xl);
+}
+
+.p-sample__head {
+  font-size: 24px;
+  @include mq(md) {
+      font-size: 32px;
+  }
+}
+
+.p-sample__text {
+  letter-spacing: 0.05em;
+  height: 1.5em;
+}
+
+.p-sample__title {
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  display: inline-block;
+  margin-block-end: var(--spacing-md);
+  @include mq(md) {
+    font-size: 24px;
+  }
+}
+
+.p-sample__divider {
+  margin-block: var(--spacing-lg-2);
+}
+
+.p-sample__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(64px, 100%), 1fr));
+  gap: var(--spacing-md);
+}
+
+
+/* 下記サンプル 構築時は削除してください */
+body {
+  background-color: var(--white);
+}
+
+.bg {
+  width: 300px;
+  height: 300px;
+  background-image: image-set(
+    url("/images/background.avif") type("image/avif"),
+    url("/images/background.png") type("image/png")
+  );
+  background-size: contain;
+}
+
+.image {
+  max-width: 400px;
+}
+
+.sample {
+  align-items: center;
+  @include mq(md) {
+    display: flex;
+  }
+}
+
+.sample p {
+  font-size: rem(20);
+}

@@ -9,6 +9,7 @@
   /* color */
   --color-white: #fff;
   --color-text: #0D2936;
+  --color-black: #000;
   --color-gray: #F0F0F0;
   --color-accent: #408F95;
   --color-primary: #ff0000;
@@ -28,6 +29,7 @@
 
 
   /* 8pxを余白の基準とした余白ルール */
+  /* 参考：https://www.tak-dcxi.com/article/use-line-height-trim-as-css-variable/ */
   --leading-trim: calc((1em - 1lh) / 2);
   --spacing-unit: 0.5rem; //8px
 
@@ -35,7 +37,9 @@
   --spacing-sm: var(--spacing-unit); //8px
   --spacing-md: calc(var(--spacing-unit) * 2); //16px
   --spacing-lg: calc(var(--spacing-unit) * 3); //24px
+  --spacing-lg-2: calc(var(--spacing-unit) * 4); //32px
   --spacing-xl: calc(var(--spacing-unit) * 5); //40px
+  --spacing-xl-2: calc(var(--spacing-unit) * 6); //48px
   --spacing-2xl: calc(var(--spacing-unit) * 8); //64px
   --spacing-3xl: calc(var(--spacing-unit) * 13); //124px
 

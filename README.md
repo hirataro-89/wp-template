@@ -1,7 +1,10 @@
 # 開発環境に関するDOC
 
 ## 各種ガイドライン
+[案件概要はこちら](./doc/coding-guidelines.md)
+
 [コーディングガイドラインはこちら](./doc/coding-guidelines.md)
+
 [PRやissueに関するガイドラインはこちら](./doc/pr-issue-guidelines.md)
 
 ## 説明動画

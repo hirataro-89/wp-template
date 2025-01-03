@@ -1,5 +1,6 @@
 html {
   box-sizing: border-box;
+  text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   /* Prevent adjustments of font size after orientation changes in iOS */
   word-break: normal;
@@ -338,7 +339,7 @@ dd {
 ul,
 ol {
   padding: 0;
-  list-style: none;
+  list-style: "";
 }
 
 a {

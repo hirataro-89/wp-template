@@ -115,3 +115,39 @@ body {
     display: none;
   }
 }
+
+// cursor:pointer
+:where(
+    :any-link,
+    button,
+    [type='button'],
+    [type='reset'],
+    [type='submit'],
+    label[for],
+    select,
+    summary,
+    [role='tab'],
+    [role='button']
+  ) {
+  cursor: pointer;
+}
+
+// iosでボタンをダブルタップしてしまったときに拡大されてしまうのを防止
+:where(button, [type='button'], [type='reset'], [type='submit']) {
+  touch-action: manipulation;
+}
+
+// フォーカスのデフォルトをなくす
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// フォームのデフォルトのフォントサイズを16pxにする
+// 16px未満だとiosでズームされてしまうため
+input[type='text'] {
+  font-size: 1rem; /* = 16px */
+}
+
+textarea {
+  field-sizing: content;
+}

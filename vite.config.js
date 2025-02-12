@@ -101,6 +101,14 @@ export default defineConfig(({
     // コンポーネントのディレクトリを読み込む
     handlebars({
       partialDirectory: resolve(__dirname, "includes"),
+      helpers: {
+        br: (contents) => {
+          return contents ? contents.replace(/\r?\n/g, "<br>") : "";
+        },
+      },
+      context: (pagePath) => ({
+        brTxt: "これはテスト文章です。\nこれはテスト文章です。",
+      }),
     }),
   ],
   resolve: {

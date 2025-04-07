@@ -61,7 +61,13 @@
         </div>
         <p>背景画像の読み込み</p>
         <div class="p-sample__bg"></div>
-        
+        <p>静的画像の読み込み</p>
+        <div class="p-sample__image">
+          <picture>
+            <source srcset="/images/image_sample.webp" type="image/webp">
+            <img src="/images/image_sample.png" loading="lazy" width="512" height="512" alt="">
+          </picture>
+        </div>
       </div>
     </section>
   </main>

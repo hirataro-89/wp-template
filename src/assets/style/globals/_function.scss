@@ -20,3 +20,7 @@
 @function rem($pixels) {
   @return math.div($pixels, 16) * 1rem;
 }
+
+@function clamp-func($size) {
+  @return clamp((($size * 0.75) * 1px), math.div($size, 1920) * 100vw, ($size * 1px));
+}

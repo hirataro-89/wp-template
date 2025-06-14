@@ -157,3 +157,27 @@ if (WP_DEBUG) {
 
 ## WordPressコンテンツの同期方法
 WordPress内で作成した記事やページ、その他設定などはNPM Scriptsの`wp-contents export`コマンドでバックアップファイルを出力できます。このバックアップファイルをGitなどで管理し、`wp-contents import`でそのバックアップファイルをインポートして開発者間でのWordPressコンテンツを同期できます。あくまで単一のバックアップファイルなので差分管理などはできず、頻繁な更新には向きません。（コンフリクトしてもどちらかのファイルしか採用できません）
+
+## 自動インポートファイル生成機能
+
+このプロジェクトには、JavaScriptおよびSCSSファイルのインポートを自動化するためのシェルスクリプト`generate-imports.sh`が含まれています。このスクリプトは、指定されたディレクトリ内のすべてのJavaScriptおよびSCSSファイルを自動的にインポートするファイルを生成します。
+
+### 使用方法
+
+1. スクリプトに実行権限を付与します。
+   ```bash
+   chmod +x generate-imports.sh
+   ```
+
+2. スクリプトを実行します。
+   ```bash
+   ./generate-imports.sh
+   ```
+
+### 機能
+
+- `src/assets/js/script.js`に、`src/assets/js`ディレクトリ内のすべてのJavaScriptファイルをインポートします。ただし、`script.js`自身はインポートしません。
+- 各`src/assets/style`内のディレクトリに`_index.scss`ファイルを生成し、そのディレクトリ内のすべてのSCSSファイルをインポートします。ただし、`_index.scss`自身はインポートしません。
+- `src/assets/style/style.scss`に、各`_index.scss`ファイルをインポートします。
+
+この機能により、手動でインポート文を追加する手間を省き、プロジェクトの管理を容易にします。

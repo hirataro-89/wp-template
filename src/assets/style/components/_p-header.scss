@@ -24,6 +24,7 @@
   max-width: rem(40);
   width: 100%;
   height: inherit;
+  margin-block: 0;
 
   @include mq("md") {
     max-width: rem(60);

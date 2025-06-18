@@ -1,7 +1,5 @@
-// 自動生成されたインポートファイル
-// このファイルは直接編集しないでください
-
-@use 'src/assets/style/components/_index.scss';
-@use 'src/assets/style/foundation/_index.scss';
-@use 'src/assets/style/layouts/_index.scss';
-@use 'src/assets/style/utils/_index.scss';
+@use "foundation";
+@use "globals";
+@use "layouts";
+@use "components";
+@use "utils";

@@ -1,6 +1,3 @@
-// 自動生成されたインポートファイル
-// このファイルは直接編集しないでください
-
-@use '_clipPath.scss';
-@use '_easing.scss';
-@use '_u-text.scss';
+@forward '_clipPath.scss';
+@forward '_easing.scss';
+@forward '_u-text.scss';

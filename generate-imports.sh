@@ -34,7 +34,6 @@ SCSS_DIRS=(
     "src/assets/style/components"
     "src/assets/style/foundation"
     "src/assets/style/layouts"
-    "src/assets/style/utils"
 )
 
 # 各ディレクトリに対して_index.scssファイルを生成
@@ -58,17 +57,4 @@ for dir in "${SCSS_DIRS[@]}"; do
 
 done
 
-# style.scssの生成
-STYLE_OUTPUT_FILE="$SCRIPT_DIR/src/assets/style/style.scss"
-
-# 出力ファイルを初期化
-echo "// 自動生成されたインポートファイル" > "$STYLE_OUTPUT_FILE"
-echo "// このファイルは直接編集しないでください" >> "$STYLE_OUTPUT_FILE"
-echo "" >> "$STYLE_OUTPUT_FILE"
-
-# 各_index.scssファイルをインポート
-for dir in "${SCSS_DIRS[@]}"; do
-    echo "@use '$dir/_index.scss';" >> "$STYLE_OUTPUT_FILE"
-done
-
-echo "SCSSインポートファイルの生成が完了しました。" 
+echo "SCSSインポートファイルの生成が完了しました。"

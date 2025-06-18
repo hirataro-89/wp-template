@@ -52,7 +52,7 @@ for dir in "${SCSS_DIRS[@]}"; do
         relative_path="${file#$SCRIPT_DIR/$dir/}"
         # 自身をインポートしない
         if [[ "$relative_path" != "_index.scss" ]]; then
-            echo "@import '$relative_path';" >> "$OUTPUT_FILE"
+            echo "@use '$relative_path';" >> "$OUTPUT_FILE"
         fi
     done
 
@@ -68,7 +68,7 @@ echo "" >> "$STYLE_OUTPUT_FILE"
 
 # 各_index.scssファイルをインポート
 for dir in "${SCSS_DIRS[@]}"; do
-    echo "@import '$dir/_index.scss';" >> "$STYLE_OUTPUT_FILE"
+    echo "@use '$dir/_index.scss';" >> "$STYLE_OUTPUT_FILE"
 done
 
 echo "SCSSインポートファイルの生成が完了しました。" 

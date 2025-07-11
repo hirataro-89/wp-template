@@ -3,7 +3,6 @@
 @if $startFrom == sp {
   .l-inner {
     max-width: rem(560);
-    width: 100%;
     padding-inline: var(--padding-sp);
     margin-inline: auto;
     @include mq("md") {
@@ -16,7 +15,6 @@
   .l-inner {
     box-sizing: revert;
     max-width: var(--inner);
-    width: 100%;
     padding-inline: var(--padding-pc);
     margin-inline: auto;
     @include mq("md") {

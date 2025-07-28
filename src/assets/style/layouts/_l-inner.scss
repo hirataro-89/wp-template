@@ -6,15 +6,13 @@
     padding-inline: var(--padding-sp);
     margin-inline: auto;
     @include mq("md") {
-      box-sizing: revert;
-      max-width: var(--inner);
+      max-width: calc(var(--inner) + var(--padding-sp) * 2);
       padding-inline: var(--padding-pc);
     }
   }
 } @else {
   .l-inner {
-    box-sizing: revert;
-    max-width: var(--inner);
+    max-width: calc(var(--inner) + var(--padding-pc) * 2);
     padding-inline: var(--padding-pc);
     margin-inline: auto;
     @include mq("md") {

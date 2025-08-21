@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-push checks..."
+
+# 品質チェックを実行
+yarn quality-check
+
+# ビルドテスト（静的）
+echo "🏗️ Testing static build..."
+yarn build
+
+# WordPress用ビルドテスト（開発環境）
+echo "🏗️ Testing WordPress build..."
+yarn build:wp:dev
+
+echo "✅ Pre-push checks completed!"

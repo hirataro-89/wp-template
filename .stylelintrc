@@ -1,9 +1,65 @@
 {
   "extends": [
     "stylelint-config-standard-scss",
-    "stylelint-config-recess-order"
+    "stylelint-config-recess-order",
+    "stylelint-prettier/recommended"
   ],
-  "ignoreFiles": ["public/**/*", "dist/**/*","wordpress/**/*"],
+  "plugins": [
+    "stylelint-prettier"
+  ],
+  "ignoreFiles": [
+    "public/**/*",
+    "dist/**/*",
+    "wordpress/**/*",
+    "node_modules/**/*"
+  ],
   "rules": {
+    "prettier/prettier": true,
+    "at-rule-no-unknown": null,
+    "scss/at-rule-no-unknown": true,
+    "no-descending-specificity": null,
+    "selector-class-pattern": null,
+    "scss/selector-no-redundant-nesting-selector": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "scss/dollar-variable-pattern": null,
+    "scss/at-mixin-pattern": null,
+    "scss/at-function-pattern": null,
+    "scss/at-extend-no-missing-placeholder": null,
+    "scss/at-import-no-partial-leading-underscore": null,
+    "scss/at-import-partial-extension": null,
+    "scss/at-import-partial-extension-blacklist": null,
+    "scss/at-import-partial-extension-whitelist": null,
+    "scss/at-mixin-argumentless-call-parentheses": null,
+    "scss/at-rule-conditional-no-parentheses": null,
+    "scss/at-rule-empty-line-before": null,
+    "scss/at-rule-no-unknown": null,
+    "scss/comment-no-empty": null,
+    "scss/comment-no-loud": null,
+    "scss/dollar-variable-colon-newline-after": null,
+    "scss/dollar-variable-colon-space-after": null,
+    "scss/dollar-variable-colon-space-before": null,
+    "scss/dollar-variable-default": null,
+    "scss/dollar-variable-empty-line-after": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "scss/dollar-variable-first-in-block": null,
+    "scss/dollar-variable-no-missing-interpolation": null,
+    "scss/dollar-variable-no-namespaced-assignment": null,
+    "scss/dollar-variable-pattern": null,
+    "scss/double-slash-comment-inline": null,
+    "scss/double-slash-comment-whitespace-inside": null,
+    "scss/function-color-relative": null,
+    "scss/function-no-unknown": null,
+    "scss/function-quote-no-quoted-strings-inside": null,
+    "scss/function-unquote-no-unquoted-strings-inside": null,
+    "scss/map-keys-quotes": null,
+    "scss/media-feature-value-dollar-variable": null,
+    "scss/no-global-function-names": null,
+    "scss/operator-no-newline-after": null,
+    "scss/operator-no-newline-before": null,
+    "scss/operator-no-unspaced": null,
+    "scss/partial-no-import": null,
+    "scss/selector-no-redundant-nesting-selector": null,
+    "scss/selector-nest-combinators": null,
+    "scss/selector-no-union-class-name": null
   }
 }

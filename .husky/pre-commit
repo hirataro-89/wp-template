@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# lint-stagedを実行（package.jsonで設定済み）
+npx lint-staged
+
+echo "✅ Pre-commit checks completed!"

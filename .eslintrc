@@ -3,11 +3,63 @@
     "eslint:recommended",
     "prettier"
   ],
+  "plugins": [
+    "import",
+    "jsdoc",
+    "prettier"
+  ],
   "parserOptions": {
     "sourceType": "module",
+    "ecmaVersion": 2022,
     "project": ["./jsconfig.json"]
   },
-  "env": { "browser": true, "node": true, "es6": true },
-  "rules": {},
-  "ignorePatterns": ["vite.config.*","wordpress/**/*"]
+  "env": { 
+    "browser": true, 
+    "node": true, 
+    "es6": true 
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "warn",
+    "no-debugger": "error",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "prefer-const": "error",
+    "no-var": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external", 
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "import/no-unresolved": "off",
+    "jsdoc/require-jsdoc": [
+      "warn",
+      {
+        "publicOnly": true,
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true
+        }
+      }
+    ]
+  },
+  "ignorePatterns": [
+    "vite.config.*",
+    "wordpress/**/*",
+    "dist/**/*",
+    "node_modules/**/*"
+  ]
 }

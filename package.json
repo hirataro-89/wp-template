@@ -20,6 +20,7 @@
   },
   "scripts": {
     "dev": "vite --host",
+    "dev:wp": "vite --host --mode wp",
     "build": "rm -rf dist && vite build",
     "build:wp": "vite build --mode wp",
     "build:wp:dev": "vite build --mode wp-dev",
@@ -28,6 +29,7 @@
     "wp-start": "wp-env start",
     "wp-stop": "wp-env stop",
     "wp-reset": "wp-env destroy && wp-env start",
+    "wp-dev": "concurrently \"yarn wp-start\" \"wait-on http://localhost:8888 && yarn dev:wp\"",
     "format": "yarn run _typecheck && yarn run _lint-fix && yarn run _prettier-fix",
     "_typecheck": "yarn run tsc --noEmit ",
     "_lint": "eslint --ext .js --ignore-path .gitignore . && stylelint \"**/*.{scss,css}\"",
@@ -44,6 +46,7 @@
     "wp-contents import": "wp-env run cli wp db reset --yes && wp-env run cli wp db import /var/www/html/wp-content/uploads/backup.sql"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -54,11 +57,12 @@
     "lint-staged": "^15.2.2",
     "prettier": "3.2.4",
     "sass": "1.70.0",
-    "stylelint": "16.2.0",
+    "stylelint": "^16.2.0",
     "stylelint-config-recess-order": "4.4.0",
     "stylelint-config-standard-scss": "13.0.0",
     "stylelint-prettier": "^4.1.0",
-    "vite": "5.0.13"
+    "vite": "5.0.13",
+    "wait-on": "^7.2.0"
   },
   "lint-staged": {
     "*.{js,jsx}": [

@@ -1,10 +1,10 @@
-@use "../globals/"as *;
+@use '../globals/' as *;
 
 .c-triangle {
-  aspect-ratio: 1/1;
-  width: rem(64);
-  background-color: var(--color-black);
   display: inline-block;
+  width: rem(64);
+  aspect-ratio: 1/1;
+  background-color: var(--color-black);
 }
 
 .c-triangle--top {

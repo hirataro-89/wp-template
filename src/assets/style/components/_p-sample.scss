@@ -1,4 +1,4 @@
-@use "../globals/" as *;
+@use '../globals/' as *;
 
 /* 下記サンプル 構築時は削除してください */
 .p-sample {
@@ -7,8 +7,8 @@
 
 .p-sample__link {
   display: inline-block;
-  font-size: rem(24);
   margin-block-start: var(--spacing-xl);
+  font-size: rem(24);
   text-decoration: underline;
 }
 
@@ -19,18 +19,18 @@
 }
 
 .p-sample__bg {
-  aspect-ratio: 1/1;
   width: 300px;
+  aspect-ratio: 1/1;
   background-image: image-set(
-    url("/images/bg_sample.webp") type("image/webp"),
-    url("/images/bg_sample.png") type("image/png")
+    url('/images/bg_sample.webp') type('image/webp'),
+    url('/images/bg_sample.png') type('image/png')
   );
   background-size: contain;
 }
 
 .p-sample__image {
-  max-width: 400px;
   width: 100%;
+  max-width: 400px;
   aspect-ratio: 1 / 1;
 }
 
@@ -45,21 +45,21 @@
 .p-sample__head {
   font-size: 24px;
   @include mq(md) {
-      font-size: 32px;
+    font-size: 32px;
   }
 }
 
 .p-sample__text {
-  letter-spacing: 0.05em;
   height: 1.5em;
+  letter-spacing: 0.05em;
 }
 
 .p-sample__title2 {
-  font-size: 18px;
-  letter-spacing: 0.05em;
-  line-height: 1.2;
   display: inline-block;
   margin-block-end: var(--spacing-md);
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
   @include mq(md) {
     font-size: 24px;
   }
@@ -74,4 +74,3 @@
   grid-template-columns: repeat(auto-fit, minmax(min(64px, 100%), 1fr));
   gap: var(--spacing-md);
 }
-

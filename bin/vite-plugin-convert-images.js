@@ -1,32 +1,40 @@
 import path from 'path';
-import sharp from 'sharp';
+
 import {
   watch
 } from 'chokidar';
+import sharp from 'sharp';
 
-export default function convertImages(options = {
-  format: 'avif', // デフォルトをAVIFに変更（WebPより高圧縮率）
-  quality: 80,
-  sizes: [1, 2], // 1x, 2xサイズを生成
-  maxWidth: 1920, // 最大幅
-  maxHeight: 1080 // 最大高さ
-}) {
+/**
+ * 画像変換プラグイン
+ * @param {Object} options - 変換オプション
+ * @returns {Object} Viteプラグインオブジェクト
+ */
+export default function convertImages(
+  options = {
+    format: 'avif', // デフォルトをAVIFに変更（WebPより高圧縮率）
+    quality: 80,
+    sizes: [1, 2], // 1x, 2xサイズを生成
+    maxWidth: 1920, // 最大幅
+    maxHeight: 1080, // 最大高さ
+  }
+) {
   return {
     name: 'convert-images',
     enforce: 'pre',
 
     buildStart() {
       const watcher = watch('src/public/images/**/*.{png,jpg,jpeg}', {
-        persistent: true
+        persistent: true,
       });
 
-      watcher.on('add', async (filePath) => {
+      watcher.on('add', async filePath => {
         if (/\.(png|jpe?g)$/.test(filePath)) {
           await processImage(filePath, options);
         }
       });
 
-      watcher.on('change', async (filePath) => {
+      watcher.on('change', async filePath => {
         if (/\.(png|jpe?g)$/.test(filePath)) {
           await processImage(filePath, options);
         }
@@ -57,14 +65,15 @@ async function processImage(filePath, options) {
     const metadata = await sharp(filePath).metadata();
 
     // リサイズが必要かチェック
-    const needsResize = metadata.width > options.maxWidth || metadata.height > options.maxHeight;
+    const needsResize =
+      metadata.width > options.maxWidth || metadata.height > options.maxHeight;
 
     // ベース画像を作成（リサイズ済み）
     let baseImage = sharp(filePath);
     if (needsResize) {
       baseImage = baseImage.resize(options.maxWidth, options.maxHeight, {
         fit: 'inside',
-        withoutEnlargement: true
+        withoutEnlargement: true,
       });
     }
 
@@ -73,9 +82,10 @@ async function processImage(filePath, options) {
       const avifPath = path.resolve(dir, `${base}.avif`);
       await baseImage
         .avif({
-          quality: options.quality
+          quality: options.quality,
         })
         .toFile(avifPath);
+      // eslint-disable-next-line no-console
       console.log(`✅ AVIF generated: ${avifPath}`);
     }
 
@@ -84,9 +94,10 @@ async function processImage(filePath, options) {
       const webpPath = path.resolve(dir, `${base}.webp`);
       await baseImage
         .webp({
-          quality: options.quality
+          quality: options.quality,
         })
         .toFile(webpPath);
+      // eslint-disable-next-line no-console
       console.log(`✅ WebP generated: ${webpPath}`);
     }
 
@@ -95,12 +106,16 @@ async function processImage(filePath, options) {
       for (const scale of options.sizes) {
         if (scale === 1) continue; // 1xは既に生成済み
 
-        const scaledWidth = Math.round((metadata.width || options.maxWidth) * scale);
-        const scaledHeight = Math.round((metadata.height || options.maxHeight) * scale);
+        const scaledWidth = Math.round(
+          (metadata.width || options.maxWidth) * scale
+        );
+        const scaledHeight = Math.round(
+          (metadata.height || options.maxHeight) * scale
+        );
 
         const scaledImage = sharp(filePath).resize(scaledWidth, scaledHeight, {
           fit: 'inside',
-          withoutEnlargement: true
+          withoutEnlargement: true,
         });
 
         // スケール付きファイル名
@@ -110,9 +125,10 @@ async function processImage(filePath, options) {
           const scaledAvifPath = path.resolve(dir, `${scaledBase}.avif`);
           await scaledImage
             .avif({
-              quality: options.quality
+              quality: options.quality,
             })
             .toFile(scaledAvifPath);
+          // eslint-disable-next-line no-console
           console.log(`✅ AVIF ${scale}x generated: ${scaledAvifPath}`);
         }
 
@@ -120,9 +136,10 @@ async function processImage(filePath, options) {
           const scaledWebpPath = path.resolve(dir, `${scaledBase}.webp`);
           await scaledImage
             .webp({
-              quality: options.quality
+              quality: options.quality,
             })
             .toFile(scaledWebpPath);
+          // eslint-disable-next-line no-console
           console.log(`✅ WebP ${scale}x generated: ${scaledWebpPath}`);
         }
       }
@@ -134,22 +151,24 @@ async function processImage(filePath, options) {
       await baseImage
         .jpeg({
           quality: options.quality,
-          progressive: true
+          progressive: true,
         })
         .toFile(optimizedJpegPath);
+      // eslint-disable-next-line no-console
       console.log(`✅ Optimized JPEG generated: ${optimizedJpegPath}`);
     } else if (ext.toLowerCase() === '.png') {
       const optimizedPngPath = path.resolve(dir, `${base}_optimized.png`);
       await baseImage
         .png({
           quality: options.quality,
-          progressive: true
+          progressive: true,
         })
         .toFile(optimizedPngPath);
+      // eslint-disable-next-line no-console
       console.log(`✅ Optimized PNG generated: ${optimizedPngPath}`);
     }
-
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('❌ Image conversion error:', err);
   }
 }

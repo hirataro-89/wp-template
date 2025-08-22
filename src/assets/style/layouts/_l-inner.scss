@@ -1,11 +1,11 @@
-@use "../globals/" as *;
+@use '../globals/' as *;
 
 @if $startFrom == sp {
   .l-inner {
     max-width: rem(560);
     padding-inline: var(--padding-sp);
     margin-inline: auto;
-    @include mq("md") {
+    @include mq('md') {
       max-width: calc(var(--inner) + var(--padding-sp) * 2);
       padding-inline: var(--padding-pc);
     }
@@ -15,7 +15,7 @@
     max-width: calc(var(--inner) + var(--padding-pc) * 2);
     padding-inline: var(--padding-pc);
     margin-inline: auto;
-    @include mq("md") {
+    @include mq('md') {
       padding-inline: var(--padding-sp);
     }
   }

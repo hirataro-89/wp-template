@@ -1,12 +1,25 @@
 {
   "core": "https://wordpress.org/wordpress-6.4.2.zip",
   "config": {
-    "WP_DEBUG": true
+    "WP_DEBUG": true,
+    "WP_DEBUG_LOG": true,
+    "WP_DEBUG_DISPLAY": false,
+    "WP_ENVIRONMENT_TYPE": "development",
+    "SCRIPT_DEBUG": true,
+    "SAVEQUERIES": true
   },
-  "themes":["."],
+  "themes": ["."],
   "mappings": {
     "wp-content/uploads": "./wordpress/uploads",
     "wp-content/themes": "./wordpress/themes",
     "wp-content/plugins": "./wordpress/plugins"
+  },
+  "env": {
+    "development": {
+      "WP_DEBUG": true,
+      "WP_DEBUG_LOG": true,
+      "WP_DEBUG_DISPLAY": false,
+      "WP_ENVIRONMENT_TYPE": "development"
+    }
   }
 }

@@ -1,8 +1,8 @@
-@use "../globals/"as *;
+@use '../globals/' as *;
 
 .p-footer {
-  background-color: var(--color-primary);
   padding: rem(40) 0;
+  background-color: var(--color-primary);
 
   @include mq(md) {
     padding: rem(60) 0;
@@ -12,19 +12,19 @@
 .p-footer__content {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: rem(20);
+  align-items: center;
 
   @include mq(md) {
     flex-direction: row;
-    justify-content: space-between;
     align-items: flex-start;
+    justify-content: space-between;
   }
 }
 
 .p-footer__logo {
-  max-width: rem(40);
   width: 100%;
+  max-width: rem(40);
 
   img {
     width: 100%;
@@ -35,8 +35,8 @@
 .p-footer__nav-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: rem(15) rem(30);
+  justify-content: center;
 
   @include mq(md) {
     justify-content: flex-end;

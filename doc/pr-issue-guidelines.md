@@ -14,4 +14,3 @@
 - サイドバーのDevelopmentにissueを設定して紐づける
   - PR・issueのどちらからでも可能
   - PRがマージされたら自動で該当のissueもcloseされるようになる
-

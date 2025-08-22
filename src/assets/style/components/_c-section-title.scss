@@ -1,13 +1,13 @@
-@use "../globals/"as *;
+@use '../globals/' as *;
 
 .c-section-title {
   position: relative;
   font-size: rem(40);
   line-height: 1;
-  text-transform: uppercase;
   text-align: center;
-  @include mq(md){
-      font-size: rem(60);
+  text-transform: uppercase;
+  @include mq(md) {
+    font-size: rem(60);
   }
 }
 
@@ -20,16 +20,16 @@
 }
 
 .c-section-title::before {
-  content: attr(data-title);
   position: absolute;
-  z-index: -1;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--color-gray);
+  z-index: -1;
   font-size: rem(80);
-  @include mq(md){
-      font-size: rem(120);
+  color: var(--color-gray);
+  content: attr(data-title);
+  transform: translate(-50%, -50%);
+  @include mq(md) {
+    font-size: rem(120);
   }
 }
 

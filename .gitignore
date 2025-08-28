@@ -37,7 +37,7 @@ _
 **/.DS_Store
 # Cursor の設定フォルダ
 .cursor/
-.CLAUDE.md
+CLAUDE.md
 .serena/
 
 # 静的コーディングのみのときはWordPressのファイルは不要なので

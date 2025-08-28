@@ -32,6 +32,14 @@ yarn.lock
 .husky/.gitignore
 _
 
+.env
+*/.DS_Store
+**/.DS_Store
+# Cursor の設定フォルダ
+.cursor/
+.CLAUDE.md
+.serena/
+
 # 静的コーディングのみのときはWordPressのファイルは不要なので
 # ↓のコメントアウトを外して/WordPress/ディレクトリごと削除
 # wordpress

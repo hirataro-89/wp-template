@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 高松産業案件用 自作パンくずリストシステム
+ * 汎用パンくずリストシステム
  * Breadcrumb NavXT プラグインの代替として作成
  *
  * 特徴:
@@ -9,213 +9,64 @@
  * - 高速動作
  * - 完全カスタマイズ可能
  * - エラーハンドリング強化
- * - ホットニュース対応
+ * - 設定可能な構造
  */
 
 // 定数定義
 define('BREADCRUMB_ENABLE_DEBUG', false);
 
-// パンくず用のURL設定（環境に依存しない方法）
-function get_breadcrumb_urls()
-{
-	return array(
-		'news' => home_url('/news/'),
-		'hotnews' => home_url('/hotnews/'),
-		'business' => home_url('/business/'),
-		'recruit' => home_url('/recruit/'),
-		'requirements' => home_url('/requirements/')
-	);
+/**
+ * パンくず設定を取得（テーマごとにカスタマイズ可能）
+ * functions.phpで add_filter('breadcrumb_config', 'your_custom_breadcrumb_config') として設定可能
+ */
+function get_breadcrumb_config() {
+	// デフォルト設定（各テーマでオーバーライド可能）
+	$config = apply_filters('breadcrumb_config', array(
+		// 投稿タイプごとのラベル設定
+		'post_type_labels' => array(
+			'post' => 'お知らせ一覧',
+			'news' => 'ニュース一覧',
+			'blog' => 'ブログ一覧'
+		),
+		// カスタムURL設定
+		'custom_urls' => array(
+			// 例: 'news' => home_url('/news/')
+		),
+		// カテゴリー名のマッピング
+		'category_mapping' => array(
+			'news' => 'お知らせ一覧'
+		),
+		// 固定ページの階層設定
+		'page_hierarchy' => array(
+			// 例: 'child-page' => 'parent-page'
+		)
+	));
+	
+	return $config;
 }
 
-// 採用系ページの共通パンくず生成
-function get_recruit_breadcrumbs($current_title = null)
+// パンくず用のURL設定（動的生成・カスタマイズ可能）
+function get_breadcrumb_urls()
 {
-	$urls = get_breadcrumb_urls();
-	$breadcrumbs = array();
-
-	$breadcrumbs[] = array(
-		'title' => '採用情報',
-		'url' => $urls['recruit'],
-		'current' => false
+	$config = get_breadcrumb_config();
+	$default_urls = array(
+		'news' => home_url('/news/'),
+		'blog' => home_url('/blog/')
 	);
-	$breadcrumbs[] = array(
-		'title' => '募集要項',
-		'url' => $urls['requirements'],
-		'current' => false
-	);
-
-	if ($current_title) {
-		$breadcrumbs[] = array(
-			'title' => $current_title,
-			'url' => '',
-			'current' => true
-		);
-	}
-
-	return $breadcrumbs;
+	
+	// カスタムURLがあれば優先
+	return array_merge($default_urls, $config['custom_urls']);
 }
 
 /**
  * パンくずリストの構造化データ（JSON-LD）を生成
+ * func-structured-data.phpで呼び出される
  */
 function get_custom_breadcrumb_structured_data()
 {
 	try {
-		$breadcrumbs = array();
-		$urls = get_breadcrumb_urls();
-
-		// ホーム
-		$breadcrumbs[] = array(
-			'title' => 'TOP',
-			'url' => home_url('/'),
-			'current' => false
-		);
-
-		// 既存のロジックと同じ処理（DRYの原則に従い、別途共通化が望ましい）
-		if (is_front_page()) {
-			// トップページの場合は構造化データ不要
-			return array();
-		} elseif (is_post_type_archive()) {
-			$post_type = get_post_type();
-			$post_type_object = get_post_type_object($post_type);
-
-			if ($post_type === 'hotnews') {
-				$breadcrumbs[] = array(
-					'title' => '高産ホットニュース',
-					'url' => '',
-					'current' => true
-				);
-			} else {
-				$breadcrumbs[] = array(
-					'title' => $post_type_object ? $post_type_object->labels->name : 'アーカイブ',
-					'url' => '',
-					'current' => true
-				);
-			}
-		} elseif (is_single()) {
-			$post_type = get_post_type();
-
-			if ($post_type === 'post') {
-				$breadcrumbs[] = array(
-					'title' => 'お知らせ一覧',
-					'url' => $urls['news'],
-					'current' => false
-				);
-				$breadcrumbs[] = array(
-					'title' => get_the_title() ?: '投稿詳細',
-					'url' => '',
-					'current' => true
-				);
-			} elseif ($post_type === 'hotnews') {
-				$breadcrumbs[] = array(
-					'title' => '高産ホットニュース',
-					'url' => $urls['hotnews'],
-					'current' => false
-				);
-				$breadcrumbs[] = array(
-					'title' => get_the_title() ?: 'ホットニュース詳細',
-					'url' => '',
-					'current' => true
-				);
-			} else {
-				$post_type_object = get_post_type_object($post_type);
-				$archive_link = get_post_type_archive_link($post_type);
-
-				if ($archive_link && $post_type_object) {
-					$breadcrumbs[] = array(
-						'title' => $post_type_object->labels->name ?: 'アーカイブ',
-						'url' => $archive_link,
-						'current' => false
-					);
-				}
-
-				$breadcrumbs[] = array(
-					'title' => get_the_title() ?: '詳細ページ',
-					'url' => '',
-					'current' => true
-				);
-			}
-		} elseif (is_category()) {
-			$cat = get_queried_object();
-			if ($cat && $cat->slug === 'news') {
-				$breadcrumbs[] = array(
-					'title' => 'お知らせ一覧',
-					'url' => '',
-					'current' => true
-				);
-			}
-		} elseif (is_page()) {
-			$page_slug = get_post_field('post_name', get_the_ID());
-
-			switch ($page_slug) {
-				case 'maker':
-					$breadcrumbs[] = array(
-						'title' => '事業案内',
-						'url' => $urls['business'],
-						'current' => false
-					);
-					$breadcrumbs[] = array(
-						'title' => get_the_title() ?: 'メーカー情報',
-						'url' => '',
-						'current' => true
-					);
-					break;
-
-				case 'requirements':
-					$breadcrumbs[] = array(
-						'title' => '採用情報',
-						'url' => $urls['recruit'],
-						'current' => false
-					);
-					$breadcrumbs[] = array(
-						'title' => get_the_title() ?: '募集要項',
-						'url' => '',
-						'current' => true
-					);
-					break;
-
-				case 'entry':
-				case 'entry-confirm':
-					$breadcrumbs = array_merge($breadcrumbs, get_recruit_breadcrumbs('エントリー'));
-					break;
-
-				case 'entry-thanks':
-					$breadcrumbs = array_merge($breadcrumbs, get_recruit_breadcrumbs('採用募集の応募完了'));
-					break;
-
-				case 'confirm':
-					$breadcrumbs[] = array(
-						'title' => 'お問い合わせ',
-						'url' => '',
-						'current' => true
-					);
-					break;
-
-				case 'thanks':
-					$breadcrumbs[] = array(
-						'title' => 'お問い合わせ',
-						'url' => '',
-						'current' => true
-					);
-					break;
-
-				default:
-					$breadcrumbs[] = array(
-						'title' => get_the_title() ?: '固定ページ',
-						'url' => '',
-						'current' => true
-					);
-					break;
-			}
-		} elseif (is_404()) {
-			$breadcrumbs[] = array(
-				'title' => '404 Page Not Found',
-				'url' => '',
-				'current' => true,
-				'class' => 'current-item-404'
-			);
-		}
-
+		$breadcrumbs = custom_get_breadcrumb_items();
+		
 		// 構造化データ形式に変換（Schema.org BreadcrumbList仕様準拠）
 		$structured_data = array();
 		$position = 1;
@@ -262,6 +113,7 @@ function custom_get_breadcrumb_items()
 
 	$breadcrumbs = array();
 	$urls = get_breadcrumb_urls();
+	$config = get_breadcrumb_config();
 
 	// ホーム
 	$breadcrumbs[] = array(
@@ -273,68 +125,106 @@ function custom_get_breadcrumb_items()
 	// 各ページタイプごとの処理
 	if (is_front_page()) {
 		// トップページの場合は何もしない（TOPのみ表示）
-
+		
 	} elseif (is_post_type_archive()) {
 		$post_type = get_post_type();
 		$post_type_object = get_post_type_object($post_type);
-
-		if ($post_type === 'hotnews') {
-			$breadcrumbs[] = array('title' => '高産ホットニュース', 'url' => '', 'current' => true);
-		} else {
-			$breadcrumbs[] = array('title' => $post_type_object ? $post_type_object->labels->name : 'アーカイブ', 'url' => '', 'current' => true);
-		}
+		
+		// カスタムラベルがあれば使用、なければオブジェクトのラベル
+		$archive_title = isset($config['post_type_labels'][$post_type]) 
+			? $config['post_type_labels'][$post_type]
+			: ($post_type_object ? $post_type_object->labels->name : 'アーカイブ');
+		
+		$breadcrumbs[] = array(
+			'title' => $archive_title,
+			'url' => '',
+			'current' => true
+		);
+		
 	} elseif (is_single()) {
 		$post_type = get_post_type();
-		if ($post_type === 'post') {
-			$breadcrumbs[] = array('title' => 'お知らせ一覧', 'url' => $urls['news'], 'current' => false);
-			$breadcrumbs[] = array('title' => get_the_title() ?: '投稿詳細', 'url' => '', 'current' => true);
-		} elseif ($post_type === 'hotnews') {
-			$breadcrumbs[] = array('title' => '高産ホットニュース', 'url' => $urls['hotnews'], 'current' => false);
-			$breadcrumbs[] = array('title' => get_the_title() ?: 'ホットニュース詳細', 'url' => '', 'current' => true);
+		
+		if ($post_type === 'post' || isset($config['post_type_labels'][$post_type])) {
+			// 投稿タイプのアーカイブページへのリンクを追加
+			$archive_link = get_post_type_archive_link($post_type);
+			$archive_title = isset($config['post_type_labels'][$post_type]) 
+				? $config['post_type_labels'][$post_type]
+				: 'アーカイブ';
+			
+			if ($archive_link || isset($urls[strtolower($post_type)])) {
+				$archive_url = $archive_link ?: $urls[strtolower($post_type)];
+				$breadcrumbs[] = array(
+					'title' => $archive_title,
+					'url' => $archive_url,
+					'current' => false
+				);
+			}
+			
+			$breadcrumbs[] = array(
+				'title' => get_the_title() ?: '詳細ページ',
+				'url' => '',
+				'current' => true
+			);
 		} else {
 			$post_type_object = get_post_type_object($post_type);
 			$archive_link = get_post_type_archive_link($post_type);
 			if ($archive_link && $post_type_object) {
-				$breadcrumbs[] = array('title' => $post_type_object->labels->name ?: 'アーカイブ', 'url' => $archive_link, 'current' => false);
+				$breadcrumbs[] = array(
+					'title' => $post_type_object->labels->name ?: 'アーカイブ',
+					'url' => $archive_link,
+					'current' => false
+				);
 			}
-			$breadcrumbs[] = array('title' => get_the_title() ?: '詳細ページ', 'url' => '', 'current' => true);
+			$breadcrumbs[] = array(
+				'title' => get_the_title() ?: '詳細ページ',
+				'url' => '',
+				'current' => true
+			);
 		}
+		
 	} elseif (is_category()) {
 		$cat = get_queried_object();
-		if ($cat && $cat->slug === 'news') {
-			$breadcrumbs[] = array('title' => 'お知らせ一覧', 'url' => '', 'current' => true);
-		}
+		
+		$cat_title = isset($config['category_mapping'][$cat->slug]) 
+			? $config['category_mapping'][$cat->slug]
+			: $cat->name;
+		
+		$breadcrumbs[] = array(
+			'title' => $cat_title,
+			'url' => '',
+			'current' => true
+		);
+		
 	} elseif (is_page()) {
 		$page_slug = get_post_field('post_name', get_the_ID());
-		switch ($page_slug) {
-			case 'maker':
-				$breadcrumbs[] = array('title' => '事業案内', 'url' => $urls['business'], 'current' => false);
-				$breadcrumbs[] = array('title' => get_the_title() ?: 'メーカー情報', 'url' => '', 'current' => true);
-				break;
-			case 'requirements':
-				$breadcrumbs[] = array('title' => '採用情報', 'url' => $urls['recruit'], 'current' => false);
-				$breadcrumbs[] = array('title' => get_the_title() ?: '募集要項', 'url' => '', 'current' => true);
-				break;
-			case 'entry':
-			case 'entry-confirm':
-				$breadcrumbs = array_merge($breadcrumbs, get_recruit_breadcrumbs('エントリー'));
-				break;
-			case 'entry-thanks':
-				$breadcrumbs = array_merge($breadcrumbs, get_recruit_breadcrumbs('採用募集の応募完了'));
-				break;
-			case 'confirm':
-			case 'thanks':
-				$breadcrumbs[] = array('title' => 'お問い合わせ', 'url' => '', 'current' => true);
-				break;
-			case 'faq':
-				$breadcrumbs[] = array('title' => 'よくあるご質問', 'url' => '', 'current' => true);
-				break;
-			default:
-				$breadcrumbs[] = array('title' => get_the_title() ?: '固定ページ', 'url' => '', 'current' => true);
-				break;
+		
+		// ページ階層を確認
+		if (isset($config['page_hierarchy'][$page_slug])) {
+			$parent_slug = $config['page_hierarchy'][$page_slug];
+			$parent_page = get_page_by_path($parent_slug);
+			
+			if ($parent_page) {
+				$breadcrumbs[] = array(
+					'title' => $parent_page->post_title,
+					'url' => get_permalink($parent_page),
+					'current' => false
+				);
+			}
 		}
+		
+		$breadcrumbs[] = array(
+			'title' => get_the_title() ?: '固定ページ',
+			'url' => '',
+			'current' => true
+		);
+		
 	} elseif (is_404()) {
-		$breadcrumbs[] = array('title' => '404 Page Not Found', 'url' => '', 'current' => true, 'class' => 'current-item-404');
+		$breadcrumbs[] = array(
+			'title' => '404 Page Not Found',
+			'url' => '',
+			'current' => true,
+			'class' => 'current-item-404'
+		);
 	}
 
 	return $breadcrumbs;
@@ -367,7 +257,7 @@ function custom_breadcrumb_fallback()
 	echo '<a href="' . esc_url(home_url('/')) . '">';
 	echo '<span>TOP</span>';
 	echo '</a>';
-	echo '<span> &gt; </span>';
+	echo '<span class="breadcrumb-separator"> &gt; </span>';
 	echo '<span class="current-item">現在のページ</span>';
 	echo '</span>';
 }
@@ -409,17 +299,22 @@ function custom_breadcrumb_output($breadcrumbs)
 }
 
 /**
- * 使用方法:
+ * 使用方法とカスタマイズ方法:
  *
- * 既存のHTMLはそのまま残して、bcn_display()だけを置き換え
- *
- * 【変更前】
- * <div class="your-custom-breadcrumb-class">
- *     <?php if(function_exists('bcn_display')) { bcn_display(); } ?>
- * </div>
- *
- * 【変更後】
+ * 【基本的な使用方法】
  * <div class="your-custom-breadcrumb-class">
  *     <?php custom_breadcrumb(); ?>
  * </div>
+ *
+ * 【カスタマイズ方法】
+ * functions.phpに以下のような設定を追加：
+ *
+ * function my_breadcrumb_config($config) {
+ *     $config['post_type_labels']['post'] = 'ニュース一覧';
+ *     $config['custom_urls']['news'] = home_url('/custom-news/');
+ *     $config['category_mapping']['blog'] = 'ブログ記事';
+ *     $config['page_hierarchy']['child-page'] = 'parent-page';
+ *     return $config;
+ * }
+ * add_filter('breadcrumb_config', 'my_breadcrumb_config');
  */

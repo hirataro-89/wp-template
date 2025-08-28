@@ -30,7 +30,7 @@ get_template_part('functions-lib/func-search-query');
 // カテゴリーアーカイブページの設定
 get_template_part('functions-lib/func-posts-per-page');
 
-// 構造化データの設定
+// 構造化データの設定（汎用化済み）
 get_template_part('functions-lib/func-structured-data');
 
 // カスタムリライトルールの設定
@@ -38,6 +38,3 @@ get_template_part('functions-lib/func-rewrite-url');
 
 // パンくずリストの設定
 get_template_part('functions-lib/func-breadcrumb');
-
-// Contact Form 7のエントリーフォーム用動的値設定・JS読み込み
-get_template_part('functions-lib/func-cf7-entry');

@@ -27,28 +27,24 @@ function my_setup()
 }
 add_action('after_setup_theme', 'my_setup');
 
-// 採用関連ページにカスタムbodyクラスを追加
-function add_recruit_body_classes($classes)
+// カスタムページにbodyクラスを追加（汎用化）
+function add_custom_page_body_classes($classes)
 {
-	// 募集要項ページ
-	if (is_page('requirements')) {
-		$classes[] = 'recruit-page';
+	// フィルターで設定可能なページとクラスのマッピング
+	$page_classes = apply_filters('custom_page_body_classes', array(
+		// 例: 'contact' => 'contact-page'
+		// 例: 'about' => 'about-page'
+	));
+	
+	$page_slug = get_post_field('post_name', get_the_ID());
+	
+	if (isset($page_classes[$page_slug])) {
+		$classes[] = $page_classes[$page_slug];
 	}
-	// エントリーフォームページ
-	if (is_page('entry')) {
-		$classes[] = 'recruit-page';
-	}
-	// エントリー確認ページ
-	if (is_page('entry-confirm')) {
-		$classes[] = 'recruit-page';
-	}
-	// エントリーサンクスページ
-	if (is_page('entry-thanks')) {
-		$classes[] = 'recruit-page';
-	}
+	
 	return $classes;
 }
-add_filter('body_class', 'add_recruit_body_classes');
+add_filter('body_class', 'add_custom_page_body_classes');
 
 /*
  * 出力を抑制

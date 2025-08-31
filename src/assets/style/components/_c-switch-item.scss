@@ -1,0 +1,41 @@
+@use "../globals/"as *;
+
+.c-switch-item {
+  display: grid block;
+  column-gap: calc(48 * var(--to-rem));
+  row-gap: calc(16 * var(--to-rem));
+  align-items: center;
+
+  grid-template:
+    "title"
+    "image"
+    "text";
+
+  @include mq(md) {
+    grid-template-areas:
+    "image title"
+    "image text";
+  }
+}
+
+.c-switch-item__title {
+  grid-area: title;
+
+  @include mq(md) {
+    align-self: end;
+  }
+
+}
+
+.c-switch-item__image {
+  grid-area: image;
+}
+
+.c-switch-item__text {
+  grid-area: text;
+
+  @include mq(md) {
+    align-self: start;
+  }
+}
+

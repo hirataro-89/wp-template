@@ -1,37 +1,19 @@
 <?php
 
 /**
- * 汎用構造化データ（JSON-LD）システム
- * Schema.org準拠の構造化データを出力
- * フィルターでカスタマイズ可能
+ * シンプル構造化データ（JSON-LD）システム
+ * 必要最小限の構造化データを出力
  */
 
 /**
- * 構造化データの設定を取得
+ * 構造化データの基本設定
  */
-function get_structured_data_config() {
-	return apply_filters('structured_data_config', array(
-		// 組織情報（全ページ共通）
-		'organization' => array(
-			'name' => get_bloginfo('name'),
-			'url' => home_url('/'),
-			'logo' => get_template_directory_uri() . '/images/logo.png'
-		),
-		// WebSite情報（トップページのみ）
-		'website' => array(
-			'name' => get_bloginfo('name'),
-			'description' => get_bloginfo('description')
-		),
-		// パンくずリスト出力フラグ
-		'enable_breadcrumbs' => true,
-		// 記事の構造化データ出力フラグ
-		'enable_articles' => true,
-		// FAQ構造化データ
-		'faq_pages' => array(), // 例: array('faq', 'contact')
-		'faq_items' => array(),
-		// JobPosting構造化データ
-		'job_pages' => array(), // 例: array('recruit', 'jobs')
-		'job_postings' => array()
+function get_simple_structured_data_config() {
+	return apply_filters('simple_structured_data_config', array(
+		'organization_name' => get_bloginfo('name'),
+		'organization_url' => home_url('/'),
+		'organization_logo' => get_template_directory_uri() . '/images/logo.png',
+		'enable_breadcrumbs' => true
 	));
 }
 

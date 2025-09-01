@@ -7,12 +7,18 @@
 
 /**
  * 構造化データの基本設定
+ * 必要に応じてここの値を直接変更してください
  */
-function get_simple_structured_data_config() {
+function get_simple_structured_data_config()
+{
 	return apply_filters('simple_structured_data_config', array(
+		// 組織名（サイト名）
 		'organization_name' => get_bloginfo('name'),
+		// 組織のURL（サイトURL）
 		'organization_url' => home_url('/'),
+		// 組織のロゴ画像URL（適宜パスを変更してください）
 		'organization_logo' => get_template_directory_uri() . '/images/logo.png',
+		// パンくずリスト構造化データの出力フラグ
 		'enable_breadcrumbs' => true
 	));
 }
@@ -20,81 +26,58 @@ function get_simple_structured_data_config() {
 /**
  * 構造化データを出力
  */
-function add_structured_data()
+function add_simple_structured_data()
 {
 	$structured_data = array();
-	$config = get_structured_data_config();
+	$config = get_simple_structured_data_config();
 
 	// Organization（組織情報）- 全ページ共通
-	if (!empty($config['organization']['name'])) {
-		$organization = array(
-			'@context' => 'https://schema.org',
-			'@type' => 'Organization',
-			'name' => $config['organization']['name'],
-			'url' => $config['organization']['url']
+	// SEO効果：サイト運営者の信頼性向上
+	$organization = array(
+		'@context' => 'https://schema.org',
+		'@type' => 'Organization',
+		'name' => $config['organization_name'],
+		'url' => $config['organization_url']
+	);
+
+	// ロゴがある場合は追加
+	if (!empty($config['organization_logo'])) {
+		$organization['logo'] = array(
+			'@type' => 'ImageObject',
+			'url' => $config['organization_logo']
 		);
-		
-		if (!empty($config['organization']['logo'])) {
-			$organization['logo'] = array(
-				'@type' => 'ImageObject',
-				'url' => $config['organization']['logo']
-			);
-		}
-		
-		$structured_data[] = $organization;
 	}
 
+	$structured_data[] = $organization;
+
 	// WebSite（サイト情報）- トップページのみ
-	if (is_front_page() && !empty($config['website']['name'])) {
+	// SEO効果：サイト全体の概要を検索エンジンに伝達
+	if (is_front_page()) {
 		$website = array(
 			'@context' => 'https://schema.org',
 			'@type' => 'WebSite',
-			'name' => $config['website']['name'],
+			'name' => get_bloginfo('name'),
 			'url' => home_url('/'),
-			'description' => $config['website']['description'] ?: '',
+			'description' => get_bloginfo('description'),
 			'publisher' => array(
 				'@type' => 'Organization',
-				'name' => $config['organization']['name']
+				'name' => $config['organization_name']
 			)
 		);
 		$structured_data[] = $website;
 	}
 
-	// Article（記事）- 投稿・固定ページ
-	if (is_singular() && $config['enable_articles']) {
-		$article_data = generate_article_structured_data($config);
-		if ($article_data) {
-			$structured_data[] = $article_data;
-		}
-	}
-
-	// FAQPage（よくある質問）
-	if (!empty($config['faq_pages']) && !empty($config['faq_items'])) {
-		$page_slug = get_post_field('post_name', get_the_ID());
-		
-		if (in_array($page_slug, $config['faq_pages'])) {
-			$faq_data = generate_faq_structured_data($config['faq_items']);
-			if ($faq_data) {
-				$structured_data[] = $faq_data;
-			}
-		}
-	}
-
-	// JobPosting（求人情報）
-	if (!empty($config['job_pages']) && !empty($config['job_postings'])) {
-		$page_slug = get_post_field('post_name', get_the_ID());
-		
-		if (in_array($page_slug, $config['job_pages'])) {
-			foreach ($config['job_postings'] as $job) {
-				$job_data = generate_job_posting_structured_data($job, $config);
-				if ($job_data) {
-					$structured_data[] = $job_data;
-				}
-			}
+	// Article/WebPage（記事・ページ）- 個別ページ
+	// SEO効果：記事やページの詳細情報を検索エンジンに提供
+	if (is_singular()) {
+		$page_data = add_page_structured_data($config);
+		if ($page_data) {
+			$structured_data[] = $page_data;
 		}
 	}
 
 	// BreadcrumbList（パンくずリスト）- トップページ以外
+	// SEO効果：サイト構造の理解とナビゲーション向上
 	if (!is_front_page() && $config['enable_breadcrumbs'] && function_exists('get_custom_breadcrumb_structured_data')) {
 		$breadcrumb_data = get_custom_breadcrumb_structured_data();
 		if (!empty($breadcrumb_data)) {
@@ -107,30 +90,27 @@ function add_structured_data()
 		}
 	}
 
-	// JSON-LD形式で出力
+	// JSON-LD形式で出力（headタグ内に挿入）
+	// Google推奨のJSON-LD形式で構造化データを出力
 	if (!empty($structured_data)) {
 		echo '<script type="application/ld+json">' . PHP_EOL;
-		echo json_encode($structured_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . PHP_EOL;
+		echo json_encode($structured_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL;
 		echo '</script>' . PHP_EOL;
 	}
 }
-add_action('wp_head', 'add_structured_data', 20);
+add_action('wp_head', 'add_simple_structured_data', 20);
 
 /**
- * 記事の構造化データを生成
+ * ページの構造化データを生成
  */
-function generate_article_structured_data($config)
+function add_page_structured_data($config)
 {
-	if (!is_singular()) {
-		return null;
-	}
-
 	$post = get_post();
 	if (!$post) {
 		return null;
 	}
 
-	$article = array(
+	$page_data = array(
 		'@context' => 'https://schema.org',
 		'@type' => is_single() ? 'Article' : 'WebPage',
 		'headline' => get_the_title(),
@@ -139,191 +119,65 @@ function generate_article_structured_data($config)
 		'dateModified' => get_the_modified_date('c'),
 		'author' => array(
 			'@type' => 'Organization',
-			'name' => $config['organization']['name']
+			'name' => $config['organization_name']
 		),
 		'publisher' => array(
 			'@type' => 'Organization',
-			'name' => $config['organization']['name']
+			'name' => $config['organization_name']
 		)
 	);
 
-	// 抜粋またはコンテンツの最初の部分を説明として追加
+	// 抜粋または概要を説明として追加
+	// SEO効果：検索結果のスニペット表示改善
 	$description = get_the_excerpt();
 	if (empty($description)) {
 		$description = wp_trim_words(strip_tags(get_the_content()), 30);
 	}
 	if ($description) {
-		$article['description'] = $description;
+		$page_data['description'] = $description;
 	}
 
-	// アイキャッチ画像
+	// アイキャッチ画像（OGP画像としても使用）
+	// SEO効果：検索結果やSNSシェア時の視覚的訴求力向上
 	if (has_post_thumbnail()) {
-		$thumbnail_id = get_post_thumbnail_id();
-		$thumbnail_url = wp_get_attachment_image_url($thumbnail_id, 'full');
-		
+		$thumbnail_url = wp_get_attachment_image_url(get_post_thumbnail_id(), 'full');
 		if ($thumbnail_url) {
-			$article['image'] = array(
+			$page_data['image'] = array(
 				'@type' => 'ImageObject',
 				'url' => $thumbnail_url
 			);
 		}
 	}
 
-	return $article;
+	return $page_data;
 }
 
 /**
- * FAQ構造化データを生成
- */
-function generate_faq_structured_data($faq_items)
-{
-	if (empty($faq_items)) {
-		return null;
-	}
-
-	$mainEntity = array();
-	foreach ($faq_items as $item) {
-		if (empty($item['question']) || empty($item['answer'])) {
-			continue;
-		}
-
-		$mainEntity[] = array(
-			'@type' => 'Question',
-			'name' => $item['question'],
-			'acceptedAnswer' => array(
-				'@type' => 'Answer',
-				'text' => $item['answer']
-			)
-		);
-	}
-
-	if (empty($mainEntity)) {
-		return null;
-	}
-
-	return array(
-		'@context' => 'https://schema.org',
-		'@type' => 'FAQPage',
-		'mainEntity' => $mainEntity
-	);
-}
-
-/**
- * JobPosting構造化データを生成
- */
-function generate_job_posting_structured_data($job, $config)
-{
-	if (empty($job['title'])) {
-		return null;
-	}
-
-	$job_posting = array(
-		'@context' => 'https://schema.org',
-		'@type' => 'JobPosting',
-		'title' => $job['title'],
-		'datePosted' => isset($job['datePosted']) ? $job['datePosted'] : date('Y-m-d'),
-		'validThrough' => isset($job['validThrough']) ? $job['validThrough'] : date('Y-m-d', strtotime('+6 months')),
-		'employmentType' => isset($job['employmentType']) ? $job['employmentType'] : 'FULL_TIME',
-		'hiringOrganization' => array(
-			'@type' => 'Organization',
-			'name' => $config['organization']['name'],
-			'url' => $config['organization']['url']
-		)
-	);
-
-	// 職務内容
-	if (!empty($job['description'])) {
-		$job_posting['description'] = $job['description'];
-	}
-
-	// 勤務地
-	if (!empty($job['location'])) {
-		$job_posting['jobLocation'] = array(
-			'@type' => 'Place',
-			'address' => array(
-				'@type' => 'PostalAddress',
-				'addressLocality' => $job['location']['city'] ?? '',
-				'addressRegion' => $job['location']['prefecture'] ?? '',
-				'postalCode' => $job['location']['postalCode'] ?? '',
-				'streetAddress' => $job['location']['street'] ?? '',
-				'addressCountry' => 'JP'
-			)
-		);
-	}
-
-	// 給与
-	if (!empty($job['salary'])) {
-		$job_posting['baseSalary'] = array(
-			'@type' => 'MonetaryAmount',
-			'currency' => 'JPY',
-			'value' => array(
-				'@type' => 'QuantitativeValue',
-				'minValue' => $job['salary']['min'] ?? 0,
-				'maxValue' => $job['salary']['max'] ?? 0,
-				'unitText' => $job['salary']['unit'] ?? 'MONTH'
-			)
-		);
-	}
-
-	// 勤務時間
-	if (!empty($job['workHours'])) {
-		$job_posting['workHours'] = $job['workHours'];
-	}
-
-	// 福利厚生
-	if (!empty($job['benefits'])) {
-		$job_posting['benefits'] = $job['benefits'];
-	}
-
-	return $job_posting;
-}
-
-/**
- * 使用方法とカスタマイズ例:
+ * ========================================
+ * カスタマイズ方法（このファイル内で完結）
+ * ========================================
  *
- * functions.phpに以下のような設定を追加：
+ * 1. 基本設定の変更
+ *    get_simple_structured_data_config() 関数内の値を直接編集
+ *    例：organization_name を '株式会社サンプル' に変更
+ *        organization_logo を '/images/logo.svg' に変更
  *
- * function my_structured_data_config($config) {
- *     // 組織情報のカスタマイズ
- *     $config['organization']['name'] = '株式会社サンプル';
- *     $config['organization']['logo'] = get_template_directory_uri() . '/images/logo.svg';
- *     
- *     // FAQページ設定
- *     $config['faq_pages'] = array('faq', 'contact');
- *     $config['faq_items'] = array(
- *         array(
- *             'question' => 'よくある質問1',
- *             'answer' => 'これが答えです。'
- *         ),
- *         array(
- *             'question' => 'よくある質問2', 
- *             'answer' => 'こちらも答えです。'
- *         )
- *     );
- *     
- *     // 求人情報設定
- *     $config['job_pages'] = array('recruit');
- *     $config['job_postings'] = array(
- *         array(
- *             'title' => '営業職',
- *             'description' => '新規顧客開拓を担当',
- *             'location' => array(
- *                 'city' => '東京都',
- *                 'prefecture' => '東京都',
- *                 'postalCode' => '100-0001',
- *                 'street' => '千代田区1-1-1'
- *             ),
- *             'salary' => array(
- *                 'min' => 250000,
- *                 'max' => 400000,
- *                 'unit' => 'MONTH'
- *             ),
- *             'workHours' => '9:00～18:00',
- *             'benefits' => '社会保険完備、交通費支給'
- *         )
- *     );
- *     
+ * 2. フィルターを使用したカスタマイズ
+ *    このファイルの最下部に以下のような関数を追加：
+ *
+ * function custom_structured_data_config($config) {
+ *     $config['organization_name'] = '株式会社サンプル';
+ *     $config['organization_logo'] = get_template_directory_uri() . '/images/logo.svg';
+ *     $config['enable_breadcrumbs'] = false; // パンくず無効化
  *     return $config;
  * }
- * add_filter('structured_data_config', 'my_structured_data_config');
+ * add_filter('simple_structured_data_config', 'custom_structured_data_config');
+ *
+ * ========================================
+ * 出力される構造化データの種類
+ * ========================================
+ * - Organization: 組織情報（全ページ）
+ * - WebSite: サイト情報（トップページのみ）
+ * - Article/WebPage: 記事・ページ情報（個別ページ）
+ * - BreadcrumbList: パンくずリスト（トップページ以外）
  */

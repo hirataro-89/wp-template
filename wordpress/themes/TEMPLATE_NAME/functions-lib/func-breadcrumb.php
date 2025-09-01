@@ -16,32 +16,51 @@
 define('BREADCRUMB_ENABLE_DEBUG', false);
 
 /**
- * パンくず設定を取得（テーマごとにカスタマイズ可能）
- * functions.phpで add_filter('breadcrumb_config', 'your_custom_breadcrumb_config') として設定可能
+ * パンくず設定を取得（このファイル内で完結）
+ * 下記の設定エリアを直接編集してカスタマイズ可能
  */
-function get_breadcrumb_config() {
-	// デフォルト設定（各テーマでオーバーライド可能）
-	$config = apply_filters('breadcrumb_config', array(
+function get_breadcrumb_config()
+{
+	// ==========================================
+	// 🛠️ 設定エリア（ここを編集してカスタマイズ）
+	// ==========================================
+
+	$config = array(
 		// 投稿タイプごとのラベル設定
 		'post_type_labels' => array(
-			'post' => 'お知らせ一覧',
-			'news' => 'ニュース一覧',
-			'blog' => 'ブログ一覧'
+			'post' => 'お知らせ一覧',  // 投稿 → お知らせ一覧
+			'news' => 'ニュース一覧', // カスタム投稿タイプ news
+			'blog' => 'ブログ一覧',   // カスタム投稿タイプ blog
+			// 'portfolio' => 'ポートフォリオ', // 必要に応じて追加
 		),
-		// カスタムURL設定
+
+		// カスタムURL設定（特別なURLパターンがある場合）
 		'custom_urls' => array(
-			// 例: 'news' => home_url('/news/')
+			// 'news' => home_url('/custom-news/'), // 例：特別なニュースURL
+			// 'blog' => home_url('/articles/'),    // 例：特別なブログURL
 		),
-		// カテゴリー名のマッピング
+
+		// カテゴリー名のマッピング（カテゴリーページでの表示名変更）
 		'category_mapping' => array(
-			'news' => 'お知らせ一覧'
+			'news' => 'お知らせ一覧', // newsカテゴリー → お知らせ一覧
+			// 'company' => '会社情報', // 例：companyカテゴリー → 会社情報
 		),
-		// 固定ページの階層設定
+
+		// 固定ページの階層設定（子ページ → 親ページ）
 		'page_hierarchy' => array(
-			// 例: 'child-page' => 'parent-page'
-		)
-	));
-	
+			// 'child-page' => 'parent-page',     // 例：子ページ → 親ページ
+			// 'about-company' => 'about',        // 例：会社概要 → 私たちについて
+			// 'contact-form' => 'contact',       // 例：お問い合わせフォーム → お問い合わせ
+		),
+	);
+
+	// ==========================================
+	// 設定エリア終了
+	// ==========================================
+
+	// フィルターでの高度なカスタマイズも可能（オプション）
+	$config = apply_filters('breadcrumb_config', $config);
+
 	return $config;
 }
 
@@ -53,7 +72,7 @@ function get_breadcrumb_urls()
 		'news' => home_url('/news/'),
 		'blog' => home_url('/blog/')
 	);
-	
+
 	// カスタムURLがあれば優先
 	return array_merge($default_urls, $config['custom_urls']);
 }
@@ -66,7 +85,7 @@ function get_custom_breadcrumb_structured_data()
 {
 	try {
 		$breadcrumbs = custom_get_breadcrumb_items();
-		
+
 		// 構造化データ形式に変換（Schema.org BreadcrumbList仕様準拠）
 		$structured_data = array();
 		$position = 1;
@@ -125,32 +144,31 @@ function custom_get_breadcrumb_items()
 	// 各ページタイプごとの処理
 	if (is_front_page()) {
 		// トップページの場合は何もしない（TOPのみ表示）
-		
+
 	} elseif (is_post_type_archive()) {
 		$post_type = get_post_type();
 		$post_type_object = get_post_type_object($post_type);
-		
+
 		// カスタムラベルがあれば使用、なければオブジェクトのラベル
-		$archive_title = isset($config['post_type_labels'][$post_type]) 
+		$archive_title = isset($config['post_type_labels'][$post_type])
 			? $config['post_type_labels'][$post_type]
 			: ($post_type_object ? $post_type_object->labels->name : 'アーカイブ');
-		
+
 		$breadcrumbs[] = array(
 			'title' => $archive_title,
 			'url' => '',
 			'current' => true
 		);
-		
 	} elseif (is_single()) {
 		$post_type = get_post_type();
-		
+
 		if ($post_type === 'post' || isset($config['post_type_labels'][$post_type])) {
 			// 投稿タイプのアーカイブページへのリンクを追加
 			$archive_link = get_post_type_archive_link($post_type);
-			$archive_title = isset($config['post_type_labels'][$post_type]) 
+			$archive_title = isset($config['post_type_labels'][$post_type])
 				? $config['post_type_labels'][$post_type]
 				: 'アーカイブ';
-			
+
 			if ($archive_link || isset($urls[strtolower($post_type)])) {
 				$archive_url = $archive_link ?: $urls[strtolower($post_type)];
 				$breadcrumbs[] = array(
@@ -159,7 +177,7 @@ function custom_get_breadcrumb_items()
 					'current' => false
 				);
 			}
-			
+
 			$breadcrumbs[] = array(
 				'title' => get_the_title() ?: '詳細ページ',
 				'url' => '',
@@ -181,28 +199,26 @@ function custom_get_breadcrumb_items()
 				'current' => true
 			);
 		}
-		
 	} elseif (is_category()) {
 		$cat = get_queried_object();
-		
-		$cat_title = isset($config['category_mapping'][$cat->slug]) 
+
+		$cat_title = isset($config['category_mapping'][$cat->slug])
 			? $config['category_mapping'][$cat->slug]
 			: $cat->name;
-		
+
 		$breadcrumbs[] = array(
 			'title' => $cat_title,
 			'url' => '',
 			'current' => true
 		);
-		
 	} elseif (is_page()) {
 		$page_slug = get_post_field('post_name', get_the_ID());
-		
+
 		// ページ階層を確認
 		if (isset($config['page_hierarchy'][$page_slug])) {
 			$parent_slug = $config['page_hierarchy'][$page_slug];
 			$parent_page = get_page_by_path($parent_slug);
-			
+
 			if ($parent_page) {
 				$breadcrumbs[] = array(
 					'title' => $parent_page->post_title,
@@ -211,13 +227,12 @@ function custom_get_breadcrumb_items()
 				);
 			}
 		}
-		
+
 		$breadcrumbs[] = array(
 			'title' => get_the_title() ?: '固定ページ',
 			'url' => '',
 			'current' => true
 		);
-		
 	} elseif (is_404()) {
 		$breadcrumbs[] = array(
 			'title' => '404 Page Not Found',
@@ -306,14 +321,21 @@ function custom_breadcrumb_output($breadcrumbs)
  *     <?php custom_breadcrumb(); ?>
  * </div>
  *
- * 【カスタマイズ方法】
- * functions.phpに以下のような設定を追加：
+ * 【簡単カスタマイズ方法】
+ * このファイル内の設定エリア（🛠️マーク部分）を直接編集するだけ！
+ * functions.phpに何も書く必要はありません。
+ *
+ * 例：設定エリアでの編集
+ * 'post_type_labels' => array(
+ *     'post' => 'ニュース一覧',      // 投稿の表示名を変更
+ *     'portfolio' => 'ポートフォリオ' // カスタム投稿タイプを追加
+ * ),
+ *
+ * 【高度なカスタマイズ方法（オプション）】
+ * functions.phpでフィルターを使用（動的な設定が必要な場合）：
  *
  * function my_breadcrumb_config($config) {
- *     $config['post_type_labels']['post'] = 'ニュース一覧';
  *     $config['custom_urls']['news'] = home_url('/custom-news/');
- *     $config['category_mapping']['blog'] = 'ブログ記事';
- *     $config['page_hierarchy']['child-page'] = 'parent-page';
  *     return $config;
  * }
  * add_filter('breadcrumb_config', 'my_breadcrumb_config');

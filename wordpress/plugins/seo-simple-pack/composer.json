@@ -1,0 +1,26 @@
+{
+    "name": "loos/wp",
+    "description": "",
+    "type": "loos-wordpress",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "LOOS,Inc.",
+            "homepage": "https://loos.co.jp/"
+        }
+    ],
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "wp-coding-standards/wpcs": "^3.1",
+        "squizlabs/php_codesniffer": "^3.10"
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

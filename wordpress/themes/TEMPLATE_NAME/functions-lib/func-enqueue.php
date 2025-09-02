@@ -21,20 +21,33 @@ function add_vite_scripts()
 	} else {
 		// 本番環境（ビルド済みファイルから読み込み）
 		$root = get_template_directory_uri();
+		$assets_dir = get_template_directory() . '/assets';
 
-		// CSS（バージョン管理付き）
-		$style_path = $root . '/assets/style/style.css';
-		$style_file = get_template_directory() . '/assets/style/style.css';
+		// メインCSS（キャッシュバスティング対応）
+		$style_path = $root . '/assets/style/style.css';  // ブラウザ用URL
+		$style_file = $assets_dir . '/style/style.css';   // サーバー内ファイルパス
 		if (file_exists($style_file)) {
-			$version = filemtime($style_file);
+			$version = filemtime($style_file);  // 更新日時をバージョン番号に
 			wp_enqueue_style('theme-styles', $style_path, array(), $version, false);
 		}
 
-		// JS（バージョン管理付き）
-		$script_path = $root . '/assets/js/script.js';
-		$script_file = get_template_directory() . '/assets/js/script.js';
+		// ビルドで生成された追加CSSファイルを自動読み込み（Splide等）
+		$css_files = glob($assets_dir . '/style/*.css');
+		foreach ($css_files as $css_file) {
+			$filename = basename($css_file, '.css');
+			// メインのstyle.cssは既に読み込み済みなのでスキップ
+			if ($filename !== 'style') {
+				$css_path = $root . '/assets/style/' . basename($css_file);  // ブラウザ用URL
+				$version = filemtime($css_file);  // キャッシュバスティング用
+				wp_enqueue_style('theme-' . $filename, $css_path, array(), $version, false);
+			}
+		}
+
+		// メインJS（全てのJSがバンドル済み・キャッシュバスティング対応）
+		$script_path = $root . '/assets/js/script.js';   // ブラウザ用URL
+		$script_file = $assets_dir . '/js/script.js';    // サーバー内ファイルパス
 		if (file_exists($script_file)) {
-			$version = filemtime($script_file);
+			$version = filemtime($script_file);  // 更新日時をバージョン番号に
 			wp_enqueue_script('theme-scripts', $script_path, array('jquery'), $version, true);
 		}
 	}
@@ -71,10 +84,10 @@ function add_font_preconnect($html, $handle)
 {
 	if ('google-fonts' === $handle) {
 		$html = <<<EOT
-<link rel='preconnect' href='https://fonts.googleapis.com'>
-<link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-$html
-EOT;
+		<link rel='preconnect' href='https://fonts.googleapis.com'>
+		<link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+		$html
+		EOT;
 	}
 	return $html;
 }

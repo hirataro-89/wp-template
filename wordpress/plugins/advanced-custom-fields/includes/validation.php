@@ -5,9 +5,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'acf_validation' ) ) :
-	#[AllowDynamicProperties]
 	class acf_validation {
 
+		/**
+		 * An array of validation errors.
+		 * @var array
+		 */
+		public $errors = array();
 
 		/**
 		 * This function will setup the class functionality
@@ -20,9 +24,6 @@ if ( ! class_exists( 'acf_validation' ) ) :
 		 * @return  n/a
 		 */
 		function __construct() {
-
-			// vars
-			$this->errors = array();
 
 			// ajax
 			add_action( 'wp_ajax_acf/validate_save_post', array( $this, 'ajax_validate_save_post' ) );
@@ -127,13 +128,23 @@ if ( ! class_exists( 'acf_validation' ) ) :
 		 */
 		public function ajax_validate_save_post() {
 			if ( ! acf_verify_ajax() ) {
+				if ( empty( $_REQUEST['nonce'] ) ) {
+					$nonce_error = __( 'ACF was unable to perform validation because no nonce was received by the server.', 'acf' );
+				} else {
+					$nonce_error = __( 'ACF was unable to perform validation because the provided nonce failed verification.', 'acf' );
+				}
+
 				wp_send_json_success(
 					array(
 						'valid'  => 0,
 						'errors' => array(
 							array(
 								'input'   => false,
-								'message' => __( 'ACF was unable to perform validation due to an invalid security nonce being provided.', 'acf' ),
+								'message' => $nonce_error,
+								'action'  => array(
+									'label' => __( 'Learn more', 'acf' ),
+									'url'   => acf_add_url_utm_tags( 'https://www.advancedcustomfields.com/resources/validation-nonce-errors/', 'docs', 'validation-nonce' ),
+								),
 							),
 						),
 					)

@@ -21,9 +21,6 @@ get_template_part('functions-lib/func-url');
 // デフォルト投稿タイプのラベル変更
 get_template_part('functions-lib/func-add-posttype-post');
 
-// メインクエリの投稿記事表示件数を切り替える
-get_template_part('functions-lib/func-posts-edit');
-
 // ターム名を検索対象に含める
 get_template_part('functions-lib/func-search-query');
 

@@ -1,5 +1,12 @@
 @use "foundation";
 @use "globals";
-@use "layouts";
-@use "components";
-@use "utils";
+
+// layoutsディレクトリ内のファイルを直接インポート
+@use "layouts/**";
+
+// componentsディレクトリ内のファイルを直接インポート
+@use "components/component/**";
+@use "components/project/**";
+
+// utilsクラス（CSSクラス）を読み込み
+@use "utils/u-text";

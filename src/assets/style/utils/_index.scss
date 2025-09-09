@@ -1,3 +1,9 @@
-@forward '_clipPath.scss';
-@forward '_easing.scss';
-@forward '_u-text.scss';
+// utilsディレクトリ内の変数・ミックスインを再エクスポート
+// 注意: @forwardはワイルドカードに対応していないため個別指定
+
+// 変数・ミックスインのみ@forwardで再エクスポート（他のSCSSファイルから@useで利用可能）
+@forward './easing';
+@forward './clipPath';
+
+// CSSクラス（_u-text.scss）は@forwardせず、直接@useで読み込む
+// 使用例: @use '../utils' as *; または @use '../utils/u-text';

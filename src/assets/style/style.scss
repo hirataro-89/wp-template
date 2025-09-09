@@ -8,5 +8,5 @@
 @use "components/component/**";
 @use "components/project/**";
 
-// utilsクラス（CSSクラス）を読み込み
-@use "utils/u-text";
+// utilsクラス（全てのファイル）をワイルドカードで読み込み
+@use "utils/**";

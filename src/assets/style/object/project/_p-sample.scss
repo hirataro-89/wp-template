@@ -1,4 +1,4 @@
-@use "../../globals/" as *;
+@use "../../globals" as *;
 
 /* 下記サンプル 構築時は削除してください */
 .p-sample {
@@ -74,4 +74,3 @@
   grid-template-columns: repeat(auto-fit, minmax(min(64px, 100%), 1fr));
   gap: var(--spacing-md);
 }
-

@@ -1,74 +1,60 @@
 #!/usr/bin/env node
-// Watch object/project SCSS files and generate a forward aggregator
-// so that new files are picked up without restarting Vite.
+ // Watch SCSS directories and bump mtime of style.scss on add/remove
+// to make Vite re-expand globs without modifying file contents.
 
-import { watch } from 'chokidar';
-import { promises as fs } from 'fs';
-import { resolve, relative, dirname, basename } from 'path';
+import {
+    watch
+} from 'chokidar';
+import {
+    promises as fs
+} from 'fs';
+import {
+    resolve,
+    relative
+} from 'path';
 
 const ROOT = resolve(process.cwd());
-const TARGET_DIR = resolve(ROOT, 'src/assets/style/object/project');
-const OUTPUT_FILE = resolve(TARGET_DIR, '_all.scss');
+const STYLE_ENTRY = resolve(ROOT, 'src/assets/style/style.scss');
+const TARGET_DIRS = [
+    resolve(ROOT, 'src/assets/style/object/project'),
+    resolve(ROOT, 'src/assets/style/object/component'),
+    resolve(ROOT, 'src/assets/style/layouts'),
+    resolve(ROOT, 'src/assets/style/utils'),
+];
 
-async function generate() {
-  try {
-    const files = await listScssFiles(TARGET_DIR);
-    const lines = [];
-    lines.push('// Auto-generated. Do not edit directly.');
-    lines.push('// This file aggregates SCSS in object/project for instant HMR.');
-    lines.push('');
-    for (const file of files) {
-      const rel = relative(TARGET_DIR, file).replace(/\\/g, '/');
-      if (basename(file) === '_all.scss') continue;
-      if (basename(file) === '_index.scss') continue;
-      const noExt = rel.replace(/\.scss$/, '');
-      const parts = noExt.split('/');
-      const last = parts.pop();
-      const normalizedLast = last.replace(/^_/, '');
-      parts.push(normalizedLast);
-      const fwdPath = parts.join('/');
-      // Use @forward so callers can @use as *
-      lines.push(`@forward "./${fwdPath}";`);
+async function touchStyle(reason = '') {
+    try {
+        // Ensure file exists, then update atime/mtime to now
+        await fs.access(STYLE_ENTRY);
+        const now = new Date();
+        await fs.utimes(STYLE_ENTRY, now, now);
+        console.log(`[watch-scss] style.scss touched${reason ? ` (${reason})` : ''}`);
+    } catch (e) {
+        console.error('[watch-scss] Touch failed:', e);
     }
-    lines.push('');
-    await fs.mkdir(dirname(OUTPUT_FILE), { recursive: true });
-    await fs.writeFile(OUTPUT_FILE, lines.join('\n'));
-    console.log(`[watch-scss] Regenerated: ${relative(ROOT, OUTPUT_FILE)} with ${files.length} files`);
-  } catch (e) {
-    console.error('[watch-scss] Generate failed:', e);
-  }
-}
-
-async function listScssFiles(dir) {
-  // recursive listing without external deps
-  const out = [];
-  async function walk(d) {
-    const entries = await fs.readdir(d, { withFileTypes: true });
-    for (const ent of entries) {
-      const p = resolve(d, ent.name);
-      if (ent.isDirectory()) {
-        await walk(p);
-      } else if (ent.isFile() && p.endsWith('.scss')) {
-        out.push(p);
-      }
-    }
-  }
-  await walk(dir);
-  return out.sort();
 }
 
 async function main() {
-  await generate();
-  const watcher = watch(`${TARGET_DIR}/**/*.scss`, {
-    ignoreInitial: true,
-  });
-  const onChange = async (path) => {
-    console.log(`[watch-scss] Change detected: ${relative(ROOT, path)}`);
-    await generate();
-  };
-  watcher.on('add', onChange);
-  watcher.on('unlink', onChange);
-  watcher.on('change', onChange);
+    // Initial touch to ensure Vite expands current globs
+    await touchStyle('startup');
+
+    const watcher = watch(
+        TARGET_DIRS.map((dir) => `${dir}/**/*.scss`), {
+            ignoreInitial: true
+        }
+    );
+
+    const onAdd = async (path) => {
+        console.log(`[watch-scss] File added: ${relative(ROOT, path)}`);
+        await touchStyle('add');
+    };
+    const onUnlink = async (path) => {
+        console.log(`[watch-scss] File removed: ${relative(ROOT, path)}`);
+        await touchStyle('unlink');
+    };
+
+    watcher.on('add', onAdd);
+    watcher.on('unlink', onUnlink);
 }
 
 main();

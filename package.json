@@ -19,7 +19,7 @@
     "vite-plugin-image-optimizer": "^1.1.8"
   },
   "scripts": {
-    "dev": "bash -c 'node bin/watch-scss-globs.js & while [ ! -f src/assets/style/object/project/_all.scss ]; do sleep 0.1; done; vite --host'",
+    "dev": "bash -c 'node bin/watch-scss-globs.js & vite --host'",
     "watch:scss": "node bin/watch-scss-globs.js",
     "build": "rm -rf dist && vite build",
     "build:wp": "vite build --mode wp",

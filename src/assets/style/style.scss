@@ -4,9 +4,9 @@
 // layoutsディレクトリ内のファイルを直接インポート
 @use "layouts/**";
 
-// componentsディレクトリ内のファイルを直接インポート
-@use "components/component/**";
-@use "components/project/**";
+// objectディレクトリ内のファイルを直接インポート
+@use "object/component/**";
+@use "object/project/**";
 
 // utilsクラス（全てのファイル）をワイルドカードで読み込み
 @use "utils/**";

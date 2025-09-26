@@ -9,8 +9,10 @@ const BREAKPOINTS = {
 };
 
 const ANIMATION = {
-    DURATION: 300 // デフォルトアニメーション時間（ミリ秒）
+    DURATION: 500 // デフォルトアニメーション時間（ミリ秒）
 };
+
+const activeAnimations = new WeakMap();
 
 // === ユーティリティ関数 ===
 
@@ -20,7 +22,7 @@ const ANIMATION = {
  * @returns {boolean} 非表示の場合true
  */
 function isElementHidden(element) {
-    return element.style.display === 'none' || !element.style.display;
+    return window.getComputedStyle(element).display === 'none';
 }
 
 /**
@@ -29,34 +31,65 @@ function isElementHidden(element) {
  * @param {Function} completeFunction - アニメーション完了時の処理
  * @param {number} duration - アニメーション時間（ミリ秒）
  */
-function animate(updateFunction, completeFunction, duration = ANIMATION.DURATION) {
+function animate(element, updateFunction, completeFunction = () => {}, duration = ANIMATION.DURATION) {
+    const prevState = activeAnimations.get(element);
+    if (prevState) {
+        prevState.cancelled = true;
+        cancelAnimationFrame(prevState.rafId);
+    }
+
     let start = null;
+    const state = { cancelled: false, rafId: 0 };
 
     function frame(timestamp) {
+        if (state.cancelled) return;
         if (!start) start = timestamp;
         const progress = timestamp - start;
-        const ratio = Math.min(progress / duration, 1);
+        const ratio = duration === 0 ? 1 : Math.min(progress / duration, 1);
 
         updateFunction(ratio, progress);
 
-        if (progress < duration) {
-            requestAnimationFrame(frame);
+        if (ratio < 1) {
+            state.rafId = requestAnimationFrame(frame);
         } else {
+            activeAnimations.delete(element);
             completeFunction();
         }
     }
-    requestAnimationFrame(frame);
+
+    state.rafId = requestAnimationFrame(frame);
+    activeAnimations.set(element, state);
 }
 
 /**
  * リサイズイベントのスロットリング用
  */
-let resizeTimeout;
 function throttledResize(callback, delay = 100) {
+    let timeoutId;
     return function() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(callback, delay);
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            timeoutId = null;
+            callback();
+        }, delay);
     };
+}
+
+function rememberDisplay(element) {
+    if (!element.dataset.originalDisplay) {
+        const computedDisplay = window.getComputedStyle(element).display;
+        if (computedDisplay && computedDisplay !== 'none') {
+            element.dataset.originalDisplay = computedDisplay;
+        }
+    }
+}
+
+function showElement(element) {
+    rememberDisplay(element);
+    const targetDisplay = element.dataset.originalDisplay || 'block';
+    element.style.display = targetDisplay;
 }
 document.addEventListener('DOMContentLoaded', function() {
     // === ハンバーガーメニュー処理 ===
@@ -137,16 +170,20 @@ function fadeToggle(element, duration = ANIMATION.DURATION) {
  * @param {number} duration - アニメーション時間（ミリ秒）
  */
 function fadeIn(element, duration = ANIMATION.DURATION) {
-    element.style.display = 'block'; // 要素を表示状態にする
-    element.style.opacity = '0'; // 透明度を0に設定（完全に透明）
+    showElement(element); // 要素を表示状態にする
+    const computedOpacity = parseFloat(window.getComputedStyle(element).opacity);
+    const startOpacity = Number.isNaN(computedOpacity) ? 0 : computedOpacity;
+    element.style.opacity = startOpacity.toString();
 
     // 汎用アニメーション関数を使用
     animate(
+        element,
         (ratio) => {
-            element.style.opacity = ratio; // 透明度を0から1まで変化
+            const nextOpacity = startOpacity + (1 - startOpacity) * ratio;
+            element.style.opacity = nextOpacity.toString();
         },
         () => {
-            // アニメーション完了時は特に処理なし
+            element.style.opacity = '1';
         },
         duration
     );
@@ -159,17 +196,20 @@ function fadeIn(element, duration = ANIMATION.DURATION) {
  * @param {number} duration - アニメーション時間（ミリ秒）
  */
 function fadeOut(element, duration = ANIMATION.DURATION) {
-    // 現在の透明度を取得（未設定の場合は1とする）
-    const initialOpacity = parseFloat(element.style.opacity) || 1;
+    rememberDisplay(element);
+    const computedOpacity = parseFloat(window.getComputedStyle(element).opacity);
+    const startOpacity = Number.isNaN(computedOpacity) ? 1 : computedOpacity;
 
     // 汎用アニメーション関数を使用
     animate(
+        element,
         (ratio) => {
-            // 透明度を初期値から0まで変化
-            element.style.opacity = initialOpacity * (1 - ratio);
+            const nextOpacity = startOpacity * (1 - ratio);
+            element.style.opacity = nextOpacity.toString();
         },
         () => {
             element.style.display = 'none'; // アニメーション完了時に要素を非表示
+            element.style.opacity = '0';
         },
         duration
     );
@@ -197,13 +237,14 @@ function slideToggle(element, duration = ANIMATION.DURATION) {
  * @param {number} duration - アニメーション時間（ミリ秒）
  */
 function slideDown(element, duration = ANIMATION.DURATION) {
-    element.style.display = 'block'; // 要素を表示状態にする
+    showElement(element); // 要素を表示状態にする
     const height = element.scrollHeight; // 要素の本来の高さを取得
     element.style.height = '0px'; // 高さを0に設定（完全に縮んだ状態）
     element.style.overflow = 'hidden'; // はみ出た内容を非表示にする
 
     // 汎用アニメーション関数を使用
     animate(
+        element,
         (ratio) => {
             // 高さを0から本来の高さまで変化
             element.style.height = (height * ratio) + 'px';
@@ -224,12 +265,14 @@ function slideDown(element, duration = ANIMATION.DURATION) {
  * @param {number} duration - アニメーション時間（ミリ秒）
  */
 function slideUp(element, duration = ANIMATION.DURATION) {
+    rememberDisplay(element);
     const height = element.scrollHeight; // 要素の現在の高さを取得
     element.style.height = height + 'px'; // 高さを明示的に設定
     element.style.overflow = 'hidden'; // はみ出た内容を非表示にする
 
     // 汎用アニメーション関数を使用
     animate(
+        element,
         (ratio) => {
             // 高さを本来の高さから0まで変化
             element.style.height = (height * (1 - ratio)) + 'px';

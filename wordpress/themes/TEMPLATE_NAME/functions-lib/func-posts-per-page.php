@@ -50,6 +50,11 @@ function set_posts_per_page($query)
     if (is_post_type_archive()) {
         // 現在表示中の投稿タイプ名を取得
         $post_type = get_query_var('post_type');
+
+        if (is_array($post_type)) {
+            $post_type = reset($post_type) ?: '';
+        }
+
         // 投稿タイプが存在し、専用設定があるかチェック
         if ($post_type && isset($settings['post_type'][$post_type])) {
             // 専用設定の表示件数を適用

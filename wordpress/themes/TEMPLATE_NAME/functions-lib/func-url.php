@@ -45,7 +45,17 @@ function img_path($file = "")
 /* mediaフォルダへのURL */
 function uploads_path()
 {
-  echo esc_url(wp_upload_dir()['baseurl']);
+  $upload_dir = wp_upload_dir();
+
+  if (!empty($upload_dir['error'])) {
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+      error_log('[uploads_path] ' . $upload_dir['error']);
+    }
+    echo '';
+    return;
+  }
+
+  echo esc_url($upload_dir['baseurl']);
 }
 
 /* ホームURLのパスを返す */
@@ -64,5 +74,19 @@ function category_path($category_slug = "")
   if (empty($category_slug)) {
     return '#'; // 空なら # を返すようにして安全対策
   }
-  return esc_url(get_category_link(get_cat_ID($category_slug)));
+  $category_id = get_cat_ID($category_slug);
+  if ($category_id === 0) {
+    return '#';
+  }
+
+  $link = get_category_link($category_id);
+
+  if ($link instanceof WP_Error) {
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+      error_log('[category_path] ' . $link->get_error_message());
+    }
+    return '#';
+  }
+
+  return esc_url($link);
 }

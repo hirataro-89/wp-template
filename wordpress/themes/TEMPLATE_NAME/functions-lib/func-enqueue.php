@@ -29,28 +29,43 @@ function add_vite_scripts()
 		// メインCSS（キャッシュバスティング対応）
 		$style_path = $root . '/assets/style/style.css';  // ブラウザ用URL
 		$style_file = $assets_dir . '/style/style.css';   // サーバー内ファイルパス
-		if (file_exists($style_file)) {
-			$version = filemtime($style_file);  // 更新日時をバージョン番号に
-			wp_enqueue_style('theme-styles', $style_path, array(), $version, false);
+			if (file_exists($style_file) && is_readable($style_file)) {
+				$version = filemtime($style_file);  // 更新日時をバージョン番号に
+				if ($version === false) {
+					$version = null;
+				}
+				wp_enqueue_style('theme-styles', $style_path, array(), $version, false);
 		}
 
 		// ビルドで生成された追加CSSファイルを自動読み込み（Splide等）
 		$css_files = glob($assets_dir . '/style/*.css');
-		foreach ($css_files as $css_file) {
-			$filename = basename($css_file, '.css');
-			// メインのstyle.cssは既に読み込み済みなのでスキップ
-			if ($filename !== 'style') {
-				$css_path = $root . '/assets/style/' . basename($css_file);  // ブラウザ用URL
-				$version = filemtime($css_file);  // キャッシュバスティング用
-				wp_enqueue_style('theme-' . $filename, $css_path, array(), $version, false);
+		if (is_array($css_files)) {
+			foreach ($css_files as $css_file) {
+				if (!is_file($css_file) || !is_readable($css_file)) {
+					continue;
+				}
+
+				$filename = basename($css_file, '.css');
+				// メインのstyle.cssは既に読み込み済みなのでスキップ
+				if ($filename !== 'style') {
+					$css_path = $root . '/assets/style/' . basename($css_file);  // ブラウザ用URL
+					$version = filemtime($css_file);  // キャッシュバスティング用
+					if ($version === false) {
+						$version = null;
+					}
+					wp_enqueue_style('theme-' . $filename, $css_path, array(), $version, false);
+				}
 			}
 		}
 
 		// メインJS（全てのJSがバンドル済み・キャッシュバスティング対応）
 		$script_path = $root . '/assets/js/script.js';   // ブラウザ用URL
 		$script_file = $assets_dir . '/js/script.js';    // サーバー内ファイルパス
-		if (file_exists($script_file)) {
-			$version = filemtime($script_file);  // 更新日時をバージョン番号に
+			if (file_exists($script_file) && is_readable($script_file)) {
+				$version = filemtime($script_file);  // 更新日時をバージョン番号に
+				if ($version === false) {
+					$version = null;
+				}
 			wp_enqueue_script('theme-scripts', $script_path, array(), $version, true);
 		}
 	}

@@ -43,5 +43,14 @@ function sc_img_path($atts, $content = null) {
 add_shortcode('uploads_path', 'sc_uploads_path');
 
 function sc_uploads_path($atts, $content = null) {
-  return wp_upload_dir()['baseurl'];
+  $upload_dir = wp_upload_dir();
+
+  if (!empty($upload_dir['error'])) {
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+      error_log('[sc_uploads_path] ' . $upload_dir['error']);
+    }
+    return '';
+  }
+
+  return $upload_dir['baseurl'];
 }

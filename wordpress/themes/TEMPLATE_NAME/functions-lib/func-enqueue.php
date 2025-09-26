@@ -6,6 +6,9 @@
  */
 function add_vite_scripts()
 {
+	// WordPressの標準jQueryを無効化
+	wp_deregister_script('jquery');
+	wp_deregister_script('jquery-migrate');
 	if (WP_DEBUG) {
 		// 開発環境（Vite開発サーバーから読み込み）
 		$root = "http://localhost:5173";
@@ -17,7 +20,7 @@ function add_vite_scripts()
 		wp_enqueue_style('theme-styles', $root . '/src/assets/style/style.scss', array(), null, false);
 
 		// メインJS
-		wp_enqueue_script('theme-scripts', $root . '/src/assets/js/script.js', array('jquery'), null, true);
+		wp_enqueue_script('theme-scripts', $root . '/src/assets/js/script.js', array(), null, true);
 	} else {
 		// 本番環境（ビルド済みファイルから読み込み）
 		$root = get_template_directory_uri();
@@ -48,15 +51,12 @@ function add_vite_scripts()
 		$script_file = $assets_dir . '/js/script.js';    // サーバー内ファイルパス
 		if (file_exists($script_file)) {
 			$version = filemtime($script_file);  // 更新日時をバージョン番号に
-			wp_enqueue_script('theme-scripts', $script_path, array('jquery'), $version, true);
+			wp_enqueue_script('theme-scripts', $script_path, array(), $version, true);
 		}
 	}
 
 	// Google Fonts
 	wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&display=swap', false);
-
-	// jQuery（ESM対応版）
-	wp_enqueue_script('jquery', 'https://cdn.skypack.dev/jquery@3.7.1', array(), '3.7.1', true);
 }
 
 add_action('wp_enqueue_scripts', 'add_vite_scripts');

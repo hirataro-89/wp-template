@@ -45,6 +45,7 @@ function img_path($file = "")
 /* mediaフォルダへのURL */
 function uploads_path()
 {
+  // アップロードディレクトリ情報を取得し、異常があれば空文字を出力して中断。
   $upload_dir = wp_upload_dir();
 
   if (!empty($upload_dir['error'])) {
@@ -55,6 +56,7 @@ function uploads_path()
     return;
   }
 
+  // 正常時はメディアのベースURLをエスケープして出力。
   echo esc_url($upload_dir['baseurl']);
 }
 
@@ -74,6 +76,7 @@ function category_path($category_slug = "")
   if (empty($category_slug)) {
     return '#'; // 空なら # を返すようにして安全対策
   }
+  // 入力スラッグからカテゴリIDを取得し、未存在の場合は安全なリンクに退避。
   $category_id = get_cat_ID($category_slug);
   if ($category_id === 0) {
     return '#';
@@ -81,6 +84,7 @@ function category_path($category_slug = "")
 
   $link = get_category_link($category_id);
 
+  // リンク取得時にWP_Errorが返るケースをログに残し、利用者にはダミーを返す。
   if ($link instanceof WP_Error) {
     if (defined('WP_DEBUG') && WP_DEBUG) {
       error_log('[category_path] ' . $link->get_error_message());
@@ -88,5 +92,6 @@ function category_path($category_slug = "")
     return '#';
   }
 
+  // 正常時はエスケープ済みURLを返却。
   return esc_url($link);
 }

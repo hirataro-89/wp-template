@@ -43,8 +43,10 @@ function sc_img_path($atts, $content = null) {
 add_shortcode('uploads_path', 'sc_uploads_path');
 
 function sc_uploads_path($atts, $content = null) {
+  // アップロードディレクトリ情報を取得し、異常が無い場合のみURLを返す。
   $upload_dir = wp_upload_dir();
 
+  // 取得時に発生したエラー内容をWP_DEBUG時だけ記録し、呼び出し側には空文字を返す。
   if (!empty($upload_dir['error'])) {
     if (defined('WP_DEBUG') && WP_DEBUG) {
       error_log('[sc_uploads_path] ' . $upload_dir['error']);
@@ -52,5 +54,6 @@ function sc_uploads_path($atts, $content = null) {
     return '';
   }
 
+  // 正常時はメディアのベースURLを返却する。
   return $upload_dir['baseurl'];
 }

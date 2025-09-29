@@ -6,7 +6,7 @@
   "trailingComma": "es5",
   "bracketSpacing": true,
   "arrowParens": "avoid",
-  "printWidth": 1080,
+  "printWidth": 500,
   "htmlWhitespaceSensitivity": "css",
   "proseWrap": "preserve"
 }

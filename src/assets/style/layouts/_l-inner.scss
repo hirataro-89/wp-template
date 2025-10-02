@@ -2,7 +2,7 @@
 
 @if $startFrom == sp {
   .l-inner {
-    max-width: rem(560);
+    max-width: calc(560 * var(--to-rem));
     padding-inline: var(--padding-sp);
     margin-inline: auto;
     @include mq("md") {

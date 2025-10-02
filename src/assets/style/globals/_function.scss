@@ -16,11 +16,6 @@
 }
 
 
-// remへの計算式（16pxを基準としている。10pxを基準とする場合は16を10に変更する）
-@function rem($pixels) {
-  @return math.div($pixels, 16) * 1rem;
-}
-
 @function clamp-func($size) {
   @return clamp((($size * 0.75) * 1px), math.div($size, 1920) * 100vw, ($size * 1px));
 }

@@ -7,7 +7,7 @@
 
 .p-sample__link {
   display: inline-block;
-  font-size: rem(24);
+  font-size: calc(24 * var(--to-rem));
   margin-block-start: var(--spacing-xl);
   text-decoration: underline;
 }

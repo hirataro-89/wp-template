@@ -6,6 +6,7 @@ import autoprefixer from "autoprefixer";
 import handlebars from "vite-plugin-handlebars";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import convertImages from './bin/vite-plugin-convert-images.js';
+import sassGlobImports from "vite-plugin-sass-glob-import";
 
 // サイトのルートを決定
 const root = resolve(__dirname, "src");
@@ -75,6 +76,9 @@ export default defineConfig(({
     },
   },
   plugins: [
+    // Sassでワイルドカード（@use "components/**"）を使えるようにする
+    sassGlobImports(),
+
     // 画像最適化
     ViteImageOptimizer({
       include: '**/*.{png,jpg,jpeg,webp,avif}', // 最適化する画像の形式を指定

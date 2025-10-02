@@ -1,3 +1,12 @@
 {
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "semi": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "printWidth": 150,
+  "htmlWhitespaceSensitivity": "css",
+  "proseWrap": "preserve"
 }

@@ -1,13 +1,13 @@
-@use "../globals/"as *;
+@use "../global" as *;
 
 .c-section-title {
   position: relative;
-  font-size: rem(40);
+  font-size: calc(40 * var(--to-rem));
   line-height: 1;
   text-transform: uppercase;
   text-align: center;
   @include mq(md){
-      font-size: rem(60);
+      font-size: calc(60 * var(--to-rem));
   }
 }
 
@@ -27,9 +27,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: var(--color-gray);
-  font-size: rem(80);
+  font-size: calc(80 * var(--to-rem));
   @include mq(md){
-      font-size: rem(120);
+      font-size: calc(120 * var(--to-rem));
   }
 }
 

@@ -30,6 +30,13 @@ yarn.lock
 
 # Husky config file
 .husky/.gitignore
+CLAUDE.md
+.env
+*/.DS_Store
+**/.DS_Store
+.cursor/
+CLAUDE.md
+.serena/
 _
 
 .env

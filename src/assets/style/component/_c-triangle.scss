@@ -1,5 +1,5 @@
-@use "../globals" as *;
-@use "../utils/clipPath" as *;
+@use "../global" as *;
+@use "../utility/clipPath" as *;
 
 .c-triangle {
   aspect-ratio: 1/1;

@@ -1,5 +1,5 @@
 /* リキッドレイアウト対応 */
-@use "../globals" as *;
+@use "../global" as *;
 
 // デザインカンプのinnerの幅を指定（リキッドレイアウト用）
 $inner: 1080px;

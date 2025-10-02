@@ -1,12 +1,12 @@
 @use "foundation";
-@use "globals";
+@use "global";
 
-// layoutsディレクトリ内のファイルを直接インポート
-@use "layouts/**";
+// layoutディレクトリ内のファイルを直接インポート
+@use "layout/**";
 
-// components と project
-@use "components/**";
+// component と project
+@use "component/**";
 @use "project/**";
 
-// utilsクラス（全てのファイル）をワイルドカードで読み込み
-@use "utils/**";
+// utilityクラス（全てのファイル）をワイルドカードで読み込み
+@use "utility/**";

@@ -1,4 +1,4 @@
-@use "../../globals" as *;
+@use "../globals" as *;
 
 .c-button {
   padding: calc(14 * var(--to-rem)) calc(60 * var(--to-rem));

@@ -1,0 +1,139 @@
+@use "../global" as *;
+
+.p-card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-top: calc(20 * var(--to-rem));
+}
+
+@include mq(md) {
+  .p-card-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: calc(20 * var(--to-rem));
+  }
+}
+
+.p-card-list__item {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 4;
+  gap: calc(8 * var(--to-rem));
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@supports not (grid-template-rows: subgrid) {
+  .p-card-list__item {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// ❌️これだと画像が大きくならない・・
+.p-card-list__button:hover .p-card-list__image img {
+  transform: scale(1.2);
+}
+
+// ⭕️ has() を使用すればOK
+.p-card-list__item:has(.p-card-list__button:hover) .p-card-list__image img {
+  transform: scale(1.2);
+}
+
+.p-card-list__image {
+  grid-row: 1;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+}
+
+.p-card-list__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.p-card-list__body {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  padding: 24px;
+  gap: 16px;
+}
+
+@supports not (grid-template-rows: subgrid) {
+  .p-card-list__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+}
+
+.p-card-list__title {
+  grid-row: 1;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #333;
+  margin: 0;
+}
+
+@include mq(md) {
+  .p-card-list__title {
+    font-size: 24px;
+  }
+}
+
+.p-card-list__text {
+  grid-row: 2;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #666;
+  margin: 0;
+}
+
+@include mq(md) {
+  .p-card-list__text {
+    font-size: 16px;
+  }
+}
+
+@supports not (grid-template-rows: subgrid) {
+  .p-card-list__text {
+    flex: 1;
+  }
+}
+
+.p-card-list__button {
+  grid-row: 3;
+  align-self: end;
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 6px;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border: 1px solid var(--color-black);
+}
+
+@include mq(md) {
+  .p-card-list__button {
+    padding: 14px 32px;
+    font-size: 16px;
+  }
+}
+
+@media (any-hover: hover) {
+  .p-card-list__button:hover {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+  }
+}

@@ -30,12 +30,10 @@ yarn.lock
 
 # Husky config file
 .husky/.gitignore
-CLAUDE.md
 .env
 */.DS_Store
 **/.DS_Store
 .cursor/
-CLAUDE.md
 .serena/
 _
 
@@ -44,7 +42,6 @@ _
 **/.DS_Store
 # Cursor の設定フォルダ
 .cursor/
-CLAUDE.md
 .serena/
 
 # 静的コーディングのみのときはWordPressのファイルは不要なので

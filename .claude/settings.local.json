@@ -4,6 +4,7 @@
       "Bash(mv:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "defaultMode": "acceptEdits"
   }
 }
